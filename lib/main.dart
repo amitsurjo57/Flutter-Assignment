@@ -45,9 +45,9 @@ class GreetingApp extends StatelessWidget {
               "Welcome to Flutter!",
             ),
             Image.asset(
-              "assets/images/flutter.jpg",
-              width: 300,
-              height: 250,
+              "assets/images/flutter.png",
+              height: 280,
+              width: 280,
             ),
             ElevatedButton(
               onPressed: () {
