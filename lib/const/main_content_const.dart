@@ -1,0 +1,2 @@
+const String mainTitle = "FLUTTER WEB.\nTHE BASIC";
+const String subTitle = "In this course we will go over the basics of using Flutter Web for development. Topics will include Responsive Layout, Deploying, Font Changes, Hover functionality, Modals and more.";
