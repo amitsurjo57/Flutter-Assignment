@@ -8,9 +8,9 @@ class MainContentButton extends StatelessWidget {
 
   const MainContentButton({
     super.key,
-    this.buttonHeight = 70,
-    this.buttonWidth = 240,
-    this.buttonFontSize = 16,
+    required this.buttonHeight,
+    required this.buttonWidth,
+    required this.buttonFontSize,
   });
 
   @override

@@ -37,7 +37,11 @@ class MobileHomeLayout extends StatelessWidget {
               subTextAlign: TextAlign.center,
             ),
             SizedBox(height: 80),
-            MainContentButton(),
+            MainContentButton(
+              buttonHeight: 60,
+              buttonWidth: double.infinity,
+              buttonFontSize: 16,
+            ),
             SizedBox(height: 160),
           ],
         ),
