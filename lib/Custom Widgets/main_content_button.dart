@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ostad_flutter_assignment/const/color.dart';
 
 class MainContentButton extends StatelessWidget {
-  final double? buttonHeight;
-  final double? buttonWidth;
-  final double? buttonFontSize;
+  final double buttonHeight;
+  final double buttonWidth;
+  final double buttonFontSize;
 
   const MainContentButton({
     super.key,
