@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ostad_flutter_assignment/Custom%20Widgets/main_content.dart';
 import 'package:ostad_flutter_assignment/const/appbar_title.dart';
 import 'package:ostad_flutter_assignment/const/color.dart';
-import 'package:ostad_flutter_assignment/const/main_content_button.dart';
+import 'package:ostad_flutter_assignment/Custom%20Widgets/main_content_button.dart';
 
 class MobileHomeLayout extends StatelessWidget {
   const MobileHomeLayout({super.key});

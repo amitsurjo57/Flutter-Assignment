@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ostad_flutter_assignment/Custom%20Widgets/appbar_tablet_desktop.dart';
 
 import '../Custom Widgets/main_content.dart';
-import '../const/main_content_button.dart';
+import '../Custom Widgets/main_content_button.dart';
 
 class TabletHomeLayout extends StatelessWidget {
   const TabletHomeLayout({super.key});
