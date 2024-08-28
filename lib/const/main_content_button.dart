@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ostad_flutter_assignment/const/color.dart';
 
 class MainContentButton extends StatelessWidget {
   final double? buttonHeight;
@@ -20,7 +21,7 @@ class MainContentButton extends StatelessWidget {
         height: buttonHeight,
         width: buttonWidth,
         decoration: BoxDecoration(
-          color: Colors.greenAccent,
+          color: commonColor,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Center(

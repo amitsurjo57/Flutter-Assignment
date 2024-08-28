@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ostad_flutter_assignment/Custom%20Widgets/main_content.dart';
 import 'package:ostad_flutter_assignment/const/appbar_title.dart';
+import 'package:ostad_flutter_assignment/const/color.dart';
 import 'package:ostad_flutter_assignment/const/main_content_button.dart';
 
 class MobileHomeLayout extends StatelessWidget {
@@ -19,8 +20,8 @@ class MobileHomeLayout extends StatelessWidget {
     return const Center(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
-        horizontal: 32,
-      ),
+          horizontal: 32,
+        ),
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -51,7 +52,7 @@ class MobileHomeLayout extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            appbarTitle(fontSize: 16,fontWeight: FontWeight.w600),
+            appbarTitle(fontSize: 16, fontWeight: FontWeight.w600),
           ],
         ),
       ),
@@ -119,7 +120,7 @@ class MobileHomeLayout extends StatelessWidget {
     return Container(
       height: 240,
       width: double.infinity,
-      color: Colors.greenAccent,
+      color: commonColor,
       child: const Center(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
