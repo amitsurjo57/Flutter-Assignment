@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ostad_flutter_assignment/custom_widget/custom_container.dart';
 import 'Shirt/shirt_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -95,350 +96,85 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  ShirtWidget sportDress() {
+    return ShirtWidget(
+      imagePath: shirtList[2].imagePath,
+      shirtType: shirtList[2].shirtType,
+      shirtColor: shirtList[2].shirtColor,
+      shirtSize: shirtList[2].shirtSize,
+      shirtPrice: shirtList[2].shirtPrice,
+      incrementPiece: () {
+        setState(() {
+          sportDressPiece++;
+          sportDressAmount = shirtList[2].shirtPrice * sportDressPiece;
+          calTotalAmount();
+        });
+      },
+      decrementPiece: () {
+        setState(() {
+          sportDressPiece <= 0 ? null : sportDressPiece--;
+          sportDressAmount = shirtList[2].shirtPrice * sportDressPiece;
+          calTotalAmount();
+        });
+      },
+      shirtPiece: sportDressPiece,
+      shirtPriceTotal: sportDressAmount,
+    );
+  }
+
+  ShirtWidget tShirt() {
+    return ShirtWidget(
+      imagePath: shirtList[1].imagePath,
+      shirtType: shirtList[1].shirtType,
+      shirtColor: shirtList[1].shirtColor,
+      shirtSize: shirtList[1].shirtSize,
+      shirtPrice: shirtList[1].shirtPrice,
+      incrementPiece: () {
+        setState(() {
+          tShirtPiece++;
+          tShirtAmount = shirtList[1].shirtPrice * tShirtPiece;
+          calTotalAmount();
+        });
+      },
+      decrementPiece: () {
+        setState(() {
+          tShirtPiece <= 0 ? null : tShirtPiece--;
+          tShirtAmount = shirtList[1].shirtPrice * tShirtPiece;
+          calTotalAmount();
+        });
+      },
+      shirtPiece: tShirtPiece,
+      shirtPriceTotal: tShirtAmount,
+    );
+  }
+
+  ShirtWidget pullOverShirt() {
+    return ShirtWidget(
+      imagePath: shirtList[0].imagePath,
+      shirtType: shirtList[0].shirtType,
+      shirtColor: shirtList[0].shirtColor,
+      shirtSize: shirtList[0].shirtSize,
+      shirtPrice: shirtList[0].shirtPrice,
+      incrementPiece: () {
+        setState(() {
+          pullOverPiece++;
+          pullOverAmount = shirtList[0].shirtPrice * pullOverPiece;
+          calTotalAmount();
+        });
+      },
+      decrementPiece: () {
+        setState(() {
+          pullOverPiece <= 0 ? null : pullOverPiece--;
+          pullOverAmount = shirtList[0].shirtPrice * pullOverPiece;
+          calTotalAmount();
+        });
+      },
+      shirtPiece: pullOverPiece,
+      shirtPriceTotal: pullOverAmount,
+    );
+  }
+
   void calTotalAmount() {
     totalAmount = pullOverAmount + tShirtAmount + sportDressAmount;
-  }
-
-  Container sportDress() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(shirtList[2].imagePath),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                shirtList[2].shirtType,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Color: ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: shirtList[2].shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const TextSpan(text: '   '),
-                    const TextSpan(
-                      text: 'Size: ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: shirtList[2].shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        sportDressPiece++;
-                        sportDressAmount =
-                            shirtList[2].shirtPrice * sportDressPiece;
-                        calTotalAmount();
-                      });
-                    },
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.add, size: 36),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Text(
-                    '$sportDressPiece',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(width: 20),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        sportDressPiece <= 0 ? null : sportDressPiece--;
-                        sportDressAmount =
-                            shirtList[2].shirtPrice * sportDressPiece;
-                        calTotalAmount();
-                      });
-                    },
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.remove, size: 36),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Icon(Icons.more_vert),
-              Text(
-                "$sportDressAmount\$",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container tShirt() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(shirtList[1].imagePath),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                shirtList[1].shirtType,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Color: ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: shirtList[1].shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const TextSpan(text: '   '),
-                    const TextSpan(
-                      text: 'Size: ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: shirtList[1].shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        tShirtPiece++;
-                        tShirtAmount = shirtList[1].shirtPrice * tShirtPiece;
-                        calTotalAmount();
-                      });
-                    },
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.add, size: 36),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Text(
-                    '$tShirtPiece',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(width: 20),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        tShirtPiece <= 0 ? null : tShirtPiece--;
-                        tShirtAmount = shirtList[1].shirtPrice * tShirtPiece;
-                        calTotalAmount();
-                      });
-                    },
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.remove, size: 36),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Icon(Icons.more_vert),
-              Text(
-                "$tShirtAmount\$",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container pullOverShirt() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(shirtList[0].imagePath),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                shirtList[0].shirtType,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Color: ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: shirtList[0].shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const TextSpan(text: '   '),
-                    const TextSpan(
-                      text: 'Size: ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: shirtList[0].shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        pullOverPiece++;
-                        pullOverAmount =
-                            shirtList[0].shirtPrice * pullOverPiece;
-                        calTotalAmount();
-                      });
-                    },
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.add, size: 36),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Text(
-                    '$pullOverPiece',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(width: 20),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        pullOverPiece <= 0 ? null : pullOverPiece--;
-                        pullOverAmount =
-                            shirtList[0].shirtPrice * pullOverPiece;
-                        calTotalAmount();
-                      });
-                    },
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.remove, size: 36),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Icon(Icons.more_vert),
-              Text(
-                "$pullOverAmount\$",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }

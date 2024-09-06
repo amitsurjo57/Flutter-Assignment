@@ -1,9 +1,9 @@
 class Shirt {
-  String imagePath;
-  String shirtType;
-  String shirtColor;
-  String shirtSize;
-  int shirtPrice;
+  final String imagePath;
+  final String shirtType;
+  final String shirtColor;
+  final String shirtSize;
+  final int shirtPrice;
 
   Shirt({
     required this.imagePath,
