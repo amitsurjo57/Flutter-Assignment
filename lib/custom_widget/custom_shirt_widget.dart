@@ -31,13 +31,11 @@ class ShirtWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 4,
-          horizontal: 12,
+          horizontal: 4,
         ),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          clipBehavior: Clip.antiAlias,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
                 imagePath,
@@ -45,7 +43,7 @@ class ShirtWidget extends StatelessWidget {
                 height: 128,
                 width: 100,
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 20),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,9 +114,8 @@ class ShirtWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(width: 44),
+              const SizedBox(width: 20),
               Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const Icon(Icons.more_vert),
