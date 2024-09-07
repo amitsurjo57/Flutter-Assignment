@@ -26,6 +26,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: const Text(
           "My Bag",
           style: TextStyle(
@@ -34,7 +35,7 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomSheet: bottomSheet(context),
+      bottomNavigationBar: bottomNavBar(context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -50,52 +51,48 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget bottomSheet(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: BottomAppBar(
-        elevation: 100,
-        height: 108,
-        color: Colors.white,
-        shadowColor: Colors.grey,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Total amount:',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
+  Widget bottomNavBar(BuildContext context) {
+    return BottomAppBar(
+      color: Colors.transparent,
+      height: 108,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Total amount:',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
                 ),
-                Text(
-                  '$totalAmount\$',
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w900),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Congratulation !!!'),
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('CHECK OUT'),
               ),
+              Text(
+                '$totalAmount\$',
+                style: const TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.w900),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Congratulation !!!'),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('CHECK OUT'),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
