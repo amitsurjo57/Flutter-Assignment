@@ -26,102 +26,106 @@ class ShirtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(imagePath),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                shirtType,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text.rich(
-                TextSpan(
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 4,
+          horizontal: 12,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              imagePath,
+              fit: BoxFit.fitHeight,
+              height: 128,
+              width: 100,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  shirtType,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'Color: ',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      TextSpan(
+                        text: shirtColor,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      const TextSpan(text: '   '),
+                      const TextSpan(
+                        text: 'Size: ',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      TextSpan(
+                        text: shirtColor,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const TextSpan(
-                      text: 'Color: ',
-                      style: TextStyle(
-                        color: Colors.grey,
+                    InkWell(
+                      onTap: incrementPiece,
+                      child: Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Icon(Icons.add, size: 36),
                       ),
                     ),
-                    TextSpan(
-                      text: shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    const SizedBox(width: 16),
+                    Text(
+                      '$shirtPiece',
+                      style: const TextStyle(fontSize: 20),
                     ),
-                    const TextSpan(text: '   '),
-                    const TextSpan(
-                      text: 'Size: ',
-                      style: TextStyle(
-                        color: Colors.grey,
+                    const SizedBox(width: 16),
+                    InkWell(
+                      onTap: decrementPiece,
+                      child: Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Icon(Icons.remove, size: 36),
                       ),
-                    ),
-                    TextSpan(
-                      text: shirtColor,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: incrementPiece,
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.add, size: 36),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Text(
-                    '$shirtPiece',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(width: 20),
-                  InkWell(
-                    onTap: decrementPiece,
-                    child: const Card(
-                      elevation: 4,
-                      child: Icon(Icons.remove, size: 36),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Icon(Icons.more_vert),
-              Text(
-                "$shirtPriceTotal\$",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Icon(Icons.more_vert),
+                const SizedBox(height: 80),
+                Text(
+                  "$shirtPriceTotal\$",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

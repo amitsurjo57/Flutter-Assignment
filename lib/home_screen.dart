@@ -37,7 +37,7 @@ class HomeScreenState extends State<HomeScreen> {
       bottomSheet: bottomSheet(context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: ListView(
           children: [
             pullOverShirt(),
             const SizedBox(height: 32),
@@ -50,7 +50,7 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  SizedBox bottomSheet(BuildContext context) {
+  Widget bottomSheet(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: BottomAppBar(
@@ -100,7 +100,7 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ShirtWidget pullOverShirt() {
+  Widget pullOverShirt() {
     return ShirtWidget(
       imagePath: shirtList[0].imagePath,
       shirtType: shirtList[0].shirtType,
@@ -126,7 +126,7 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ShirtWidget tShirt() {
+  Widget tShirt() {
     return ShirtWidget(
       imagePath: shirtList[1].imagePath,
       shirtType: shirtList[1].shirtType,
@@ -152,7 +152,7 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ShirtWidget sportDress() {
+  Widget sportDress() {
     return ShirtWidget(
       imagePath: shirtList[2].imagePath,
       shirtType: shirtList[2].shirtType,
