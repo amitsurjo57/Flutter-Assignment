@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:flutter/material.dart';
 import 'package:greeting_app/product.dart';
 import 'package:greeting_app/update_product_screen.dart';
@@ -92,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           FloatingActionButton(
             onPressed: addItem,
             backgroundColor: Theme.of(context).colorScheme.primary,
-            child: const Icon(Icons.add, size: 32,color: Colors.black),
+            child: const Icon(Icons.add, size: 32, color: Colors.black),
           ),
         ],
       ),
@@ -132,9 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                           getProduct();
                         },
-                        onDelete: () async {
-                          await deleteItem(itemList[index].id);
-                        },
+                        onDelete: () => deleteItem(itemList[index].id),
                       ),
                     );
                   },
