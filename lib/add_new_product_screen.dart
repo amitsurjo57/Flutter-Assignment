@@ -24,7 +24,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add new item"),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -41,11 +41,12 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                   : ElevatedButton(
                       onPressed: _onAddItem,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.black,
                         fixedSize: const Size.fromWidth(double.maxFinite),
                         textStyle: const TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       child: const Text("Add Item"),

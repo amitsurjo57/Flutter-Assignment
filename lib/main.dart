@@ -13,7 +13,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFFE7DBFD),
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFFF2D3BE),
+          secondary: Color(0xFFF5A882),
+        ),
+        dividerTheme: const DividerThemeData(
+          color: Colors.grey,
+        )
       ),
       home: const HomeScreen(),
     );

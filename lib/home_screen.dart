@@ -34,10 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Product List"),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.primary,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -81,15 +81,18 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(left: 32),
             child: FloatingActionButton(
               onPressed: getProduct,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               child: const Icon(
                 Icons.refresh_rounded,
                 size: 32,
+                color: Colors.black,
               ),
             ),
           ),
           FloatingActionButton(
             onPressed: addItem,
-            child: const Icon(Icons.add, size: 32),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: const Icon(Icons.add, size: 32,color: Colors.black),
           ),
         ],
       ),

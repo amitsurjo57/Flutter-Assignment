@@ -25,6 +25,9 @@ class Product extends StatelessWidget {
               TextButton.icon(
                 onPressed: item.onEdit,
                 icon: const Icon(Icons.edit),
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.secondary,
+                ),
                 label: const Text("Edit"),
               ),
               TextButton.icon(
