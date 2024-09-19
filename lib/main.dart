@@ -19,7 +19,10 @@ class MyApp extends StatelessWidget {
         ),
         dividerTheme: const DividerThemeData(
           color: Colors.grey,
-        )
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.grey.shade800,
+        ),
       ),
       home: const HomeScreen(),
     );
