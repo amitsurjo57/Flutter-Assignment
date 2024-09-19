@@ -96,9 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: _inProgress
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : itemList.isEmpty
               ? const Center(
                   child: Text(

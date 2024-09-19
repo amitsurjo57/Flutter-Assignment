@@ -23,6 +23,9 @@ class MyApp extends StatelessWidget {
         snackBarTheme: SnackBarThemeData(
           backgroundColor: Colors.grey.shade800,
         ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Color(0xFFF5A882),
+        )
       ),
       home: const HomeScreen(),
     );
