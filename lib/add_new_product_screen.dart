@@ -87,6 +87,9 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             validator: (String? valid) {
               if (valid == null || valid.isEmpty) {
                 return 'Fill up all text field';
+              } else if (int.tryParse(_codeController.text).runtimeType !=
+                  int) {
+                return 'Code should be a number';
               }
               return null;
             },
@@ -102,6 +105,9 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             validator: (String? valid) {
               if (valid == null || valid.isEmpty) {
                 return 'Fill up all text field';
+              } else if (int.tryParse(_priceController.text).runtimeType !=
+                  int) {
+                return 'Price should be a number';
               }
               return null;
             },
@@ -117,6 +123,9 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             validator: (String? valid) {
               if (valid == null || valid.isEmpty) {
                 return 'Fill up all text field';
+              } else if (int.tryParse(_quantityController.text).runtimeType !=
+                  int) {
+                return 'Quantity should be a number';
               }
               return null;
             },
@@ -132,6 +141,9 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
             validator: (String? valid) {
               if (valid == null || valid.isEmpty) {
                 return 'Fill up all text field';
+              } else if (int.tryParse(_totalPriceController.text).runtimeType !=
+                  int) {
+                return 'Total price should be a number';
               }
               return null;
             },
