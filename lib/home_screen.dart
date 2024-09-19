@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getProduct();
+    getItem();
   }
 
   final ScrollController _scrollController =
@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 32),
             child: FloatingActionButton(
-              onPressed: getProduct,
+              onPressed: getItem,
               backgroundColor: Theme.of(context).colorScheme.primary,
               child: const Icon(
                 Icons.refresh_rounded,
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           );
-                          getProduct();
+                          getItem();
                         },
                         onDelete: () => deleteItem(itemList[index].id),
                       ),
@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     _inProgress = true;
     setState(() {});
-    getProduct();
+    getItem();
   }
 
   Future<void> deleteItem(String id) async {
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       snackBar();
     }
-    getProduct();
+    getItem();
   }
 
   void snackBar() {
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> getProduct() async {
+  Future<void> getItem() async {
     _inProgress = true;
     setState(() {});
     Uri uri = Uri.parse('http://164.68.107.70:6060/api/v1/ReadProduct');
