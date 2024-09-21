@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:greeting_app/product.dart';
 import 'package:greeting_app/update_product_screen.dart';
@@ -31,67 +32,88 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
-        title: const Text("Product List"),
+        title: const Text(
+          "Product List",
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      bottomNavigationBar: BottomAppBar(
+      bottomNavigationBar: CurvedNavigationBar(
+        onTap: (value) async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddNewProductScreen(),
+            ),
+          );
+          getItem();
+        },
+        items: const [
+          Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 36,
+          ),
+        ],
+        height: 60,
+        backgroundColor: Colors.transparent,
         color: Theme.of(context).colorScheme.primary,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            GestureDetector(
-              onTap: () {
-                _scrollController.animateTo(
-                  _scrollController.position.minScrollExtent,
-                  duration: const Duration(seconds: 1),
-                  curve: Curves.easeInOut,
-                );
-              },
-              child: const Column(
-                children: [
-                  Icon(Icons.arrow_upward),
-                  Text('Top'),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                _scrollController.animateTo(
-                  _scrollController.position.maxScrollExtent,
-                  duration: const Duration(seconds: 1),
-                  curve: Curves.easeInOut,
-                );
-              },
-              child: const Column(
-                children: [
-                  Icon(Icons.arrow_downward),
-                  Text('Bottom'),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 32),
-            child: FloatingActionButton(
-              onPressed: getItem,
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              child: const Icon(
-                Icons.refresh_rounded,
-                size: 32,
-                color: Colors.black,
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  onPressed: getItem,
+                  child: const Icon(
+                    Icons.refresh,
+                    size: 32,
+                  ),
+                ),
+              ],
             ),
           ),
-          FloatingActionButton(
-            onPressed: addItem,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            child: const Icon(Icons.add, size: 32, color: Colors.black),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  _scrollController.animateTo(
+                    _scrollController.position.minScrollExtent,
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: const Icon(
+                  Icons.arrow_upward,
+                  size: 32,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              FloatingActionButton(
+                onPressed: () {
+                  _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: const Icon(
+                  Icons.arrow_downward,
+                  size: 32,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ],
       ),

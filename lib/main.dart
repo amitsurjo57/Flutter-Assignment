@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: const ColorScheme.light(
-          primary: Color(0xFFF2D3BE),
-          secondary: Color(0xFFF5A882),
+          primary: Color(0xFF82D1F1),
+          secondary: Colors.cyanAccent,
         ),
         dividerTheme: const DividerThemeData(
           color: Colors.grey,
@@ -24,8 +24,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.grey.shade800,
         ),
         progressIndicatorTheme: const ProgressIndicatorThemeData(
-          color: Color(0xFFF5A882),
-        )
+          // color: Color(0xFFF5A882),
+          color: Colors.lightBlueAccent,
+        ),
       ),
       home: const HomeScreen(),
     );

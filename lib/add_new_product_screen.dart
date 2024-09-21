@@ -42,11 +42,11 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                       onPressed: _onAddItem,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.black,
+                        foregroundColor: Colors.white,
                         fixedSize: const Size.fromWidth(double.maxFinite),
                         textStyle: const TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       child: const Text("Add Item"),

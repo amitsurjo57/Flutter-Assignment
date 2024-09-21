@@ -9,33 +9,51 @@ class Product extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(item.name),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
         children: [
-          Text("Product Code: ${item.code}"),
-          Text("Price: \$${item.price}"),
-          Text("Quantity: ${item.quantity}"),
-          Text("Total Price: \$${item.totalPrice}"),
-          const Divider(thickness: 2),
+          Card(
+            elevation: 4,
+            child: ListTile(
+              title: Text(item.name),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Product Code: ${item.code}"),
+                  Text("Price: \$${item.price}"),
+                  Text("Quantity: ${item.quantity}"),
+                  Text("Total Price: \$${item.totalPrice}"),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton.icon(
+              ElevatedButton.icon(
                 onPressed: item.onEdit,
-                icon: const Icon(Icons.edit),
-                style: TextButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.secondary,
+                icon: const Icon(
+                  Icons.edit,
+                  color: Colors.lightBlueAccent,
                 ),
-                label: const Text("Edit"),
+                style: ElevatedButton.styleFrom(elevation: 4),
+                label: const Text(
+                  "Edit",
+                  style: TextStyle(
+                    color: Colors.lightBlueAccent,
+                  ),
+                ),
               ),
-              TextButton.icon(
+              const SizedBox(width: 16),
+              ElevatedButton.icon(
                 onPressed: item.onDelete,
                 icon: const Icon(
-                  Icons.delete_outline,
+                  Icons.delete,
                   color: Colors.redAccent,
                 ),
+                style: ElevatedButton.styleFrom(elevation: 4),
                 label: const Text(
                   "Delete",
                   style: TextStyle(color: Colors.redAccent),
