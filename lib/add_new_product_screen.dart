@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:greeting_app/snack_bar.dart';
 import 'package:http/http.dart';
 
 class AddNewProductScreen extends StatefulWidget {
@@ -177,6 +178,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
       body: jsonEncode(addEncodeItem),
     );
     if (response.statusCode == 200) {
+      _clearTextField();
       showSnackBar();
     }
     _inProgress = false;
@@ -184,12 +186,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
   }
 
   void showSnackBar() {
-    _clearTextField();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Item added"),
-      ),
-    );
+    MySnackBar.mySnackBar(context, message: 'Item Added',icon: Icons.add);
   }
 
   void _clearTextField() {

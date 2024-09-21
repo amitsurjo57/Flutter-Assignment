@@ -20,9 +20,6 @@ class MyApp extends StatelessWidget {
         dividerTheme: const DividerThemeData(
           color: Colors.grey,
         ),
-        snackBarTheme: SnackBarThemeData(
-          backgroundColor: Colors.grey.shade800,
-        ),
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           // color: Color(0xFFF5A882),
           color: Colors.lightBlueAccent,

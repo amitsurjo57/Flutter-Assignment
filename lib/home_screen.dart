@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:greeting_app/product.dart';
+import 'package:greeting_app/snack_bar.dart';
 import 'package:greeting_app/update_product_screen.dart';
 import 'package:http/http.dart';
 
@@ -181,11 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void snackBar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Item Deleted'),
-      ),
-    );
+    MySnackBar.mySnackBar(context, message: 'Item Deleted',icon: Icons.delete);
   }
 
   Future<void> getItem() async {

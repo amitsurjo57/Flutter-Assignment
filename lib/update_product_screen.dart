@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:greeting_app/snack_bar.dart';
 import 'package:http/http.dart';
 
 import 'item.dart';
@@ -105,13 +106,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
   }
 
   void snackBar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Item Updated',
-        ),
-      ),
-    );
+    MySnackBar.mySnackBar(context, message: 'Item Updated',icon: Icons.update);
   }
 
   Form textFieldForm() {
