@@ -41,83 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        onTap: (value) async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddNewProductScreen(),
-            ),
-          );
-          getItem();
-        },
-        items: const [
-          Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 36,
-          ),
-        ],
-        height: 60,
-        backgroundColor: Colors.transparent,
-        color: Theme.of(context).colorScheme.primary,
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  onPressed: getItem,
-                  child: const Icon(
-                    Icons.refresh,
-                    size: 32,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                onPressed: () {
-                  _scrollController.animateTo(
-                    _scrollController.position.minScrollExtent,
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.easeInOut,
-                  );
-                },
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: const Icon(
-                  Icons.arrow_upward,
-                  size: 32,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 20),
-              FloatingActionButton(
-                onPressed: () {
-                  _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.easeInOut,
-                  );
-                },
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: const Icon(
-                  Icons.arrow_downward,
-                  size: 32,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+      bottomNavigationBar: myNavigationBar(context),
+      floatingActionButton: myFloatingActionButton(context),
       body: _inProgress
           ? const Center(child: CircularProgressIndicator())
           : itemList.isEmpty
@@ -129,34 +54,125 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 )
-              : ListView.builder(
-                  controller: _scrollController,
-                  itemCount: itemList.length,
-                  itemBuilder: (context, index) {
-                    return Product(
-                      item: Item(
-                        name: itemList[index].name,
-                        id: itemList[index].id,
-                        code: itemList[index].code,
-                        price: itemList[index].price,
-                        quantity: itemList[index].quantity,
-                        totalPrice: itemList[index].totalPrice,
-                        onEdit: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => UpdateProductScreen(
-                                item: itemList[index],
-                              ),
-                            ),
-                          );
-                          getItem();
-                        },
-                        onDelete: () => deleteItem(itemList[index].id),
-                      ),
-                    );
-                  },
+              : mainBody(),
+    );
+  }
+
+  ListView mainBody() {
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: itemList.length,
+      itemBuilder: (context, index) {
+        return Product(
+          item: Item(
+            name: itemList[index].name,
+            id: itemList[index].id,
+            code: itemList[index].code,
+            price: itemList[index].price,
+            quantity: itemList[index].quantity,
+            totalPrice: itemList[index].totalPrice,
+            onEdit: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UpdateProductScreen(
+                    item: itemList[index],
+                  ),
                 ),
+              );
+              getItem();
+            },
+            onDelete: () => deleteItem(itemList[index].id),
+          ),
+        );
+      },
+    );
+  }
+
+  Row myFloatingActionButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                onPressed: getItem,
+                child: const Icon(
+                  Icons.refresh,
+                  size: 32,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: scrollTop,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Icon(
+                Icons.arrow_upward,
+                size: 32,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 20),
+            FloatingActionButton(
+              onPressed: scrollBottom,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Icon(
+                Icons.arrow_downward,
+                size: 32,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void scrollBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void scrollTop() {
+    _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  CurvedNavigationBar myNavigationBar(BuildContext context) {
+    return CurvedNavigationBar(
+      onTap: (value) async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AddNewProductScreen(),
+          ),
+        );
+        getItem();
+      },
+      items: const [
+        Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 36,
+        ),
+      ],
+      height: 60,
+      backgroundColor: Colors.transparent,
+      color: Theme.of(context).colorScheme.primary,
     );
   }
 
@@ -182,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void snackBar() {
-    MySnackBar.mySnackBar(context, message: 'Item Deleted',icon: Icons.delete);
+    MySnackBar.mySnackBar(context, message: 'Item Deleted', icon: Icons.delete);
   }
 
   Future<void> getItem() async {
