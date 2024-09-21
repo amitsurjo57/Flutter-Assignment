@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
           color: Colors.grey,
         ),
         progressIndicatorTheme: const ProgressIndicatorThemeData(
-          // color: Color(0xFFF5A882),
           color: Colors.lightBlueAccent,
         ),
       ),
