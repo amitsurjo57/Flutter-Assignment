@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'package:greeting_app/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,21 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: const ColorScheme.light(
-          primary: Color(0xFF82D1F1),
-          secondary: Colors.cyanAccent,
-        ),
-        dividerTheme: const DividerThemeData(
-          color: Colors.grey,
-        ),
-        progressIndicatorTheme: const ProgressIndicatorThemeData(
-          color: Colors.lightBlueAccent,
-        ),
-      ),
-      home: const HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }
