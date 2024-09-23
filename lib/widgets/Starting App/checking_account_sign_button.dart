@@ -16,7 +16,7 @@ class CheckingAccountSignButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = const TextStyle(
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.bold,
     );
 
     return Row(

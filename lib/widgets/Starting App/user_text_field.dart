@@ -18,7 +18,7 @@ class UserTextField extends StatelessWidget {
         fillColor: Colors.white,
         filled: true,
         enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green),
+          borderSide: BorderSide(color: Colors.grey),
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.green),
