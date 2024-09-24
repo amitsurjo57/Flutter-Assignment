@@ -57,7 +57,7 @@ class _LogInScreenState extends State<LogInScreen> {
   StartingActionButton button() {
     return const StartingActionButton(
       child: Icon(
-        Icons.arrow_circle_right_outlined,
+        Icons.arrow_forward_ios,
         size: 32,
         color: Colors.white,
       ),
