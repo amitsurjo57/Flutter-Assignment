@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greeting_app/utils/common_color.dart';
 
 class UserTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -14,6 +15,7 @@ class UserTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      cursorColor: CommonColor.commonColor,
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
