@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:greeting_app/utils/common_color.dart';
 
-class StartingActionButton extends StatelessWidget {
+class MyButton extends StatelessWidget {
   final Widget child;
-  const StartingActionButton({super.key, required this.child});
+  final void Function() onPressed;
+
+  const MyButton({
+    super.key,
+    required this.child,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: onPressed,
       minWidth: double.infinity,
       height: 44,
       color: CommonColor.commonColor,

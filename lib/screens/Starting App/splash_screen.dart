@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:greeting_app/screens/log_in_screen.dart';
+import 'package:greeting_app/screens/Starting%20App/log_in_screen.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -31,9 +31,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BackgroundWidget(
-        child: Center(
-          child: SvgPicture.asset('assets/images/logo.svg'),
-        ),
+        children: [
+          Center(
+            child: SvgPicture.asset('assets/images/logo.svg'),
+          ),
+        ]
       ),
     );
   }
