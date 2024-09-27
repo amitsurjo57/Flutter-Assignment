@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greeting_app/screens/Starting%20App/enter_email.dart';
+import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 import 'package:greeting_app/widgets/Starting%20App/checking_account_sign_button.dart';
 import 'package:greeting_app/widgets/Starting%20App/my_button.dart';
@@ -31,9 +32,9 @@ class _LogInScreenState extends State<LogInScreen> {
         children: [
           buildHeader(),
           const SizedBox(height: 40),
-          buildUserTextField(_emailController, 'Email'),
+          emailTextField(),
           const SizedBox(height: 20),
-          buildUserTextField(_passController, 'Password'),
+          passwordTextField(),
           const SizedBox(height: 20),
           button(),
           const SizedBox(height: 80),
@@ -43,17 +44,23 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  UserTextField buildUserTextField(
-      TextEditingController controller, String hintText) {
+  PasswordTextField passwordTextField() {
+    return PasswordTextField(
+      textEditingController: _passController,
+      hintText: 'Password',
+    );
+  }
+
+  UserTextField emailTextField() {
     return UserTextField(
-      controller: controller,
-      hintText: hintText,
+      controller: _emailController,
+      hintText: 'Email',
     );
   }
 
   MyButton button() {
     return MyButton(
-      onPressed: (){
+      onPressed: () {
         //TODO: Log in
       },
       child: const Icon(

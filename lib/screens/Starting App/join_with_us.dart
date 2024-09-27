@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greeting_app/ui/navigate_to_signin_page.dart';
+import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 import 'package:greeting_app/widgets/Starting%20App/my_button.dart';
 import 'package:greeting_app/widgets/Starting%20App/user_text_field.dart';
@@ -68,27 +69,10 @@ class _JoinWithUsState extends State<JoinWithUs> {
     );
   }
 
-  UserTextField buildPasswordField() {
-    return UserTextField(
-      controller: _passwordController,
+  PasswordTextField buildPasswordField() {
+    return PasswordTextField(
+      textEditingController: _passwordController,
       hintText: 'Password',
-      obSecureText: showPass,
-      suffixIcon: GestureDetector(
-        onTap: () {
-          setState(() {
-            showPass = !showPass;
-          });
-        },
-        child: showPass
-            ? const Icon(
-                Icons.visibility_off_outlined,
-                color: Colors.grey,
-              )
-            : const Icon(
-                Icons.visibility_outlined,
-                color: Colors.grey,
-              ),
-      ),
     );
   }
 
@@ -123,7 +107,7 @@ class _JoinWithUsState extends State<JoinWithUs> {
 
   Text buildHeader() {
     return const Text(
-      'Set Password',
+      'Join With Us',
       style: TextStyle(
         fontSize: 28,
         fontWeight: FontWeight.bold,

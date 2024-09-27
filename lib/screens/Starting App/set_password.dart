@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:greeting_app/screens/Starting%20App/join_with_us.dart';
 import 'package:greeting_app/ui/navigate_to_signin_page.dart';
+import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 import 'package:greeting_app/widgets/Starting%20App/my_button.dart';
-import 'package:greeting_app/widgets/Starting%20App/user_text_field.dart';
 
 class SetPassword extends StatefulWidget {
   const SetPassword({super.key});
@@ -64,51 +64,17 @@ class _SetPasswordState extends State<SetPassword> {
     );
   }
 
-  UserTextField buildConfirmPasswordTextField() {
-    return UserTextField(
-      controller: _confirmPassController,
+  PasswordTextField buildConfirmPasswordTextField() {
+    return PasswordTextField(
+      textEditingController: _confirmPassController,
       hintText: 'Confirm Password',
-      obSecureText: showConPass,
-      suffixIcon: GestureDetector(
-        onTap: () {
-          setState(() {
-            showConPass = !showConPass;
-          });
-        },
-        child: showConPass
-            ? const Icon(
-                Icons.visibility_off_outlined,
-                color: Colors.grey,
-              )
-            : const Icon(
-                Icons.visibility_outlined,
-                color: Colors.grey,
-              ),
-      ),
     );
   }
 
-  UserTextField buildPasswordTextField() {
-    return UserTextField(
-      controller: _passController,
+  PasswordTextField buildPasswordTextField() {
+    return PasswordTextField(
+      textEditingController: _passController,
       hintText: 'Password',
-      obSecureText: showPass,
-      suffixIcon: GestureDetector(
-        onTap: () {
-          setState(() {
-            showPass = !showPass;
-          });
-        },
-        child: showPass
-            ? const Icon(
-                Icons.visibility_off_outlined,
-                color: Colors.grey,
-              )
-            : const Icon(
-                Icons.visibility_outlined,
-                color: Colors.grey,
-              ),
-      ),
     );
   }
 
