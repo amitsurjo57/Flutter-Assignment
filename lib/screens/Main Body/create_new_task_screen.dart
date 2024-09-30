@@ -15,6 +15,13 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   @override
+  void dispose() {
+    _subjectController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
