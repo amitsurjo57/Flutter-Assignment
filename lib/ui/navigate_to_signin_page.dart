@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greeting_app/screens/Starting%20App/log_in_screen.dart';
+import 'package:greeting_app/screens/Starting%20Body/log_in_screen.dart';
 import 'package:greeting_app/widgets/Starting%20App/checking_account_sign_button.dart';
 
 class NavigateToSignInPage {

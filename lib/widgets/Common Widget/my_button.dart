@@ -7,7 +7,10 @@ class MyButton extends StatelessWidget {
 
   const MyButton({
     super.key,
-    required this.child,
+    this.child = const Icon(
+      Icons.arrow_forward_ios,
+      color: Colors.white,
+    ),
     required this.onPressed,
   });
 

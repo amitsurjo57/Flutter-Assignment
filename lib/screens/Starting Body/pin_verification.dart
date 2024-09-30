@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:greeting_app/screens/Starting%20App/set_password.dart';
+import 'package:greeting_app/screens/Starting%20Body/set_password.dart';
 import 'package:greeting_app/utils/common_color.dart';
 import 'package:greeting_app/ui/navigate_to_signin_page.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
-import 'package:greeting_app/widgets/Starting%20App/my_button.dart';
+import 'package:greeting_app/widgets/Common%20Widget/my_button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PinVerification extends StatefulWidget {

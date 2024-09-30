@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:greeting_app/screens/Starting%20App/pin_verification.dart';
+import 'package:greeting_app/screens/Starting%20Body/pin_verification.dart';
 import 'package:greeting_app/ui/navigate_to_signin_page.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
-import 'package:greeting_app/widgets/Starting%20App/my_button.dart';
-import 'package:greeting_app/widgets/Starting%20App/user_text_field.dart';
+import 'package:greeting_app/widgets/Common%20Widget/my_button.dart';
+import 'package:greeting_app/widgets/Common%20Widget/user_text_field.dart';
 
 class EnterEmail extends StatefulWidget {
   const EnterEmail({super.key});
@@ -42,10 +42,6 @@ class _EnterEmailState extends State<EnterEmail> {
 
   MyButton buildMyButton() {
     return MyButton(
-      child: const Icon(
-        Icons.arrow_forward_ios,
-        color: Colors.white,
-      ),
       onPressed: () {
         Navigator.push(
           context,

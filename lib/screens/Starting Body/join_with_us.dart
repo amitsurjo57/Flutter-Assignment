@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:greeting_app/ui/navigate_to_signin_page.dart';
 import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
-import 'package:greeting_app/widgets/Starting%20App/my_button.dart';
-import 'package:greeting_app/widgets/Starting%20App/user_text_field.dart';
+import 'package:greeting_app/widgets/Common%20Widget/my_button.dart';
+import 'package:greeting_app/widgets/Common%20Widget/user_text_field.dart';
 
 class JoinWithUs extends StatefulWidget {
   const JoinWithUs({super.key});
@@ -62,10 +62,6 @@ class _JoinWithUsState extends State<JoinWithUs> {
       onPressed: () {
         // TODO: Implement Register button
       },
-      child: const Icon(
-        Icons.arrow_forward_ios,
-        color: Colors.white,
-      ),
     );
   }
 

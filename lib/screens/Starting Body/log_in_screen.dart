@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:greeting_app/screens/Starting%20App/enter_email.dart';
+import 'package:greeting_app/screens/Main%20Body/home_screen.dart';
+import 'package:greeting_app/screens/Starting%20Body/enter_email.dart';
 import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 import 'package:greeting_app/widgets/Starting%20App/checking_account_sign_button.dart';
-import 'package:greeting_app/widgets/Starting%20App/my_button.dart';
-import 'package:greeting_app/widgets/Starting%20App/user_text_field.dart';
+import 'package:greeting_app/widgets/Common%20Widget/my_button.dart';
+import 'package:greeting_app/widgets/Common%20Widget/user_text_field.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -61,13 +62,13 @@ class _LogInScreenState extends State<LogInScreen> {
   MyButton button() {
     return MyButton(
       onPressed: () {
-        //TODO: Log in
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
       },
-      child: const Icon(
-        Icons.arrow_forward_ios,
-        size: 32,
-        color: Colors.white,
-      ),
     );
   }
 
@@ -93,7 +94,6 @@ class _LogInScreenState extends State<LogInScreen> {
             child: const Text(
               'Forgot Password?',
               style: TextStyle(
-                fontSize: 12,
                 color: Colors.grey,
                 fontWeight: FontWeight.bold,
               ),

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:greeting_app/screens/Starting%20App/log_in_screen.dart';
+import 'package:greeting_app/screens/Starting%20Body/log_in_screen.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 
 class SplashScreen extends StatefulWidget {

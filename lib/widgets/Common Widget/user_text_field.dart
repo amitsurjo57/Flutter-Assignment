@@ -7,6 +7,8 @@ class UserTextField extends StatelessWidget {
   final bool obSecureText;
   final TextInputType? textInputType;
   final Widget? suffixIcon;
+  final int maxLine;
+  final int? maxLength;
 
   const UserTextField({
     super.key,
@@ -14,6 +16,8 @@ class UserTextField extends StatelessWidget {
     required this.hintText,
     this.suffixIcon,
     this.textInputType,
+    this.maxLength,
+    this.maxLine = 1,
     this.obSecureText = false,
   });
 
@@ -24,6 +28,8 @@ class UserTextField extends StatelessWidget {
       cursorColor: CommonColor.commonColor,
       obscureText: obSecureText,
       keyboardType: textInputType,
+      maxLines: maxLine,
+      maxLength: maxLength,
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
         fillColor: Colors.white,

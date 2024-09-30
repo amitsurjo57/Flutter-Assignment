@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greeting_app/screens/Starting%20App/splash_screen.dart';
+import 'package:greeting_app/screens/Starting%20Body/splash_screen.dart';
+import 'package:greeting_app/utils/common_color.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +11,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: CommonColor.commonColor,
+        ),
+      ),
+      home: const SplashScreen(),
     );
   }
 }
