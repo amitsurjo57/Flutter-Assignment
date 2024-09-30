@@ -17,6 +17,7 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const TamAppbar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(
