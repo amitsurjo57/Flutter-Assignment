@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:greeting_app/screens/Starting%20Body/log_in_screen.dart';
 import 'package:greeting_app/utils/common_color.dart';
 
-class TamAppbar extends StatelessWidget implements PreferredSizeWidget{
+class TamAppbar extends StatelessWidget implements PreferredSizeWidget {
   const TamAppbar({super.key});
 
   @override
@@ -9,12 +10,15 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
       backgroundColor: CommonColor.commonColor,
       iconTheme: const IconThemeData(color: Colors.white),
-      actions: const [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 12,
+      actions: [
+        InkWell(
+          onTap: () => _onLogOut(context),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 12,
+            ),
+            child: Icon(Icons.logout),
           ),
-          child: Icon(Icons.logout),
         ),
       ],
       title: Row(
@@ -27,10 +31,10 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget{
               Text(
                 'Amit Banik Surjo',
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
               Text(
                 'surjo@gmail.com',
@@ -43,6 +47,16 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget{
           ),
         ],
       ),
+    );
+  }
+
+  void _onLogOut(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LogInScreen(),
+      ),
+      (_) => false,
     );
   }
 

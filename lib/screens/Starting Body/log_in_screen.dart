@@ -62,11 +62,12 @@ class _LogInScreenState extends State<LogInScreen> {
   MyButton button() {
     return MyButton(
       onPressed: () {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const HomeScreen(),
           ),
+          (_) => false,
         );
       },
     );

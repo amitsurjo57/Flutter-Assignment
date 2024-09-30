@@ -51,11 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.task),
+            icon: Icon(Icons.task_rounded),
             label: 'New Task',
           ),
           NavigationDestination(
-            icon: Icon(Icons.done),
+            icon: Icon(Icons.task_alt_rounded),
             label: 'Completed',
           ),
           NavigationDestination(
