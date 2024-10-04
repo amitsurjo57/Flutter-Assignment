@@ -14,6 +14,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final PageController _pageController = PageController();
+
+  @override
+  dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   int _selectedIndex = 0;
 
@@ -35,6 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: (index) {
           setState(() {
             _selectedIndex = index;
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.linear,
+            );
           });
         },
         destinations: const [
@@ -56,7 +68,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: listScreen[_selectedIndex],
+      body: PageView.builder(
+        controller: _pageController,
+        itemCount: listScreen.length,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        itemBuilder: (context, index) => listScreen[index],
+      ),
     );
   }
 }
