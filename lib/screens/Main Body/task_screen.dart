@@ -72,7 +72,9 @@ class TaskScreen extends StatelessWidget {
           status: 'New',
           statusColor: Colors.blue,
           onEdit: () => _onTapEdit(context),
-          onDelete: () {},
+          onDelete: () {
+            // TODO: On delete Task
+          },
         ),
       ),
     );
@@ -88,7 +90,9 @@ class TaskScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: ['New', 'Completed', 'Cancelled', 'Progress'].map((e) {
               return ListTile(
-                onTap: () {},
+                onTap: () {
+                  // TODO: On Tap in Task Status
+                },
                 title: Text(e),
               );
             }).toList(),
@@ -101,7 +105,9 @@ class TaskScreen extends StatelessWidget {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: On Edit Okay
+              },
               child: const Text('Okay'),
             ),
           ],

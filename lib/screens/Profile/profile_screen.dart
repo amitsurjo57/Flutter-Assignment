@@ -67,7 +67,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   MyButton button() {
     return MyButton(
-      onPressed: () {},
+      onPressed: () {
+        // TODO: Implement Update profile
+      },
     );
   }
 
