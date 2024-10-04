@@ -61,17 +61,19 @@ class TaskScreen extends StatelessWidget {
     );
   }
 
-  TaskWidget mainTasks(BuildContext context) {
-    return TaskWidget(
-      itemCount: 10,
-      taskModel: TaskModel(
-        title: 'This is title',
-        subTitle: 'This is subTitle',
-        date: '04/10/2024',
-        status: 'New',
-        statusColor: Colors.blue,
-        onEdit: () => _onTapEdit(context),
-        onDelete: () {},
+  Expanded mainTasks(BuildContext context) {
+    return Expanded(
+      child: TaskWidget(
+        itemCount: 10,
+        taskModel: TaskModel(
+          title: 'This is title',
+          subTitle: 'This is subTitle',
+          date: '04/10/2024',
+          status: 'New',
+          statusColor: Colors.blue,
+          onEdit: () => _onTapEdit(context),
+          onDelete: () {},
+        ),
       ),
     );
   }
