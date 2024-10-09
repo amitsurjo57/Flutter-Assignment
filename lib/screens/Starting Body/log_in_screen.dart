@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:greeting_app/data/models/network_response.dart';
+import 'package:greeting_app/data/services/network_caller.dart';
+import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/screens/Main%20Body/home_screen.dart';
 import 'package:greeting_app/screens/Starting%20Body/enter_email.dart';
+import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
+import 'package:greeting_app/widgets/Starting%20App/center_progress_indicator.dart';
 import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 import 'package:greeting_app/widgets/Starting%20App/checking_account_sign_button.dart';
@@ -15,8 +20,10 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  bool _inProgress = false;
 
   @override
   void dispose() {
@@ -29,18 +36,21 @@ class _LogInScreenState extends State<LogInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: BackgroundWidget(
-        children: [
-          buildHeader(),
-          const SizedBox(height: 40),
-          emailTextField(),
-          const SizedBox(height: 20),
-          passwordTextField(),
-          const SizedBox(height: 20),
-          button(),
-          const SizedBox(height: 80),
-          forgetPass(),
-        ],
+      body: Form(
+        key: _globalKey,
+        child: BackgroundWidget(
+          children: [
+            buildHeader(),
+            const SizedBox(height: 40),
+            emailTextField(),
+            const SizedBox(height: 20),
+            passwordTextField(),
+            const SizedBox(height: 20),
+            button(),
+            const SizedBox(height: 80),
+            forgetPass(),
+          ],
+        ),
       ),
     );
   }
@@ -56,21 +66,52 @@ class _LogInScreenState extends State<LogInScreen> {
     return UserTextField(
       controller: _emailController,
       hintText: 'Email',
+      validateMSG: 'Enter your email',
     );
   }
 
-  MyButton button() {
-    return MyButton(
-      onPressed: () {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-          (_) => false,
-        );
-      },
+  Widget button() {
+    return Visibility(
+      visible: !_inProgress,
+      replacement: const CenterProgressIndicator(),
+      child: MyButton(
+        onPressed: onLonIn,
+      ),
     );
+  }
+
+  void onLonIn() {
+    if (_globalKey.currentState!.validate()) {
+      logIn();
+    }
+  }
+
+  Future<void> logIn() async {
+    _inProgress = true;
+    setState(() {});
+    Map<String, dynamic> userLogInfo = {
+      "email": _emailController.text.trim(),
+      "password": _passController.text,
+    };
+    final NetworkResponse response = await NetworkCaller.postRequest(
+      url: NetworkUrls.logIn,
+      body: userLogInfo,
+    );
+    _inProgress = false;
+    setState(() {});
+
+    if (response.isSuccess) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+        (_) => false,
+      );
+      mySnackBar(context, 'Successfully Logged In');
+    } else {
+      mySnackBar(context, response.errorMessage);
+    }
   }
 
   Text buildHeader() {

@@ -9,6 +9,7 @@ class UserTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final int maxLine;
   final int? maxLength;
+  final String? validateMSG;
 
   const UserTextField({
     super.key,
@@ -19,12 +20,14 @@ class UserTextField extends StatelessWidget {
     this.maxLength,
     this.maxLine = 1,
     this.obSecureText = false,
+    this.validateMSG,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       cursorColor: CommonColor.commonColor,
       obscureText: obSecureText,
       keyboardType: textInputType,
@@ -40,6 +43,12 @@ class UserTextField extends StatelessWidget {
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.grey),
       ),
+      validator: (String? value){
+        if(value?.isEmpty ?? true){
+          return validateMSG;
+        }
+        return null;
+      },
     );
   }
 }
