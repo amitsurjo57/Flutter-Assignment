@@ -103,17 +103,25 @@ class _LogInScreenState extends State<LogInScreen> {
 
     if (response.isSuccess) {
       await AuthControllers.saveAccessToken(response.responseData['token']);
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-        (_) => false,
-      );
-      mySnackBar(context, 'Successfully Logged In');
+      navigateFunc();
+      snackBar('Successfully Log In');
     } else {
-      mySnackBar(context, response.errorMessage);
+      snackBar('No User Found');
     }
+  }
+
+  void navigateFunc() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+      (_) => false,
+    );
+  }
+
+  void snackBar(String msg) {
+    mySnackBar(context, msg);
   }
 
   Text buildHeader() {

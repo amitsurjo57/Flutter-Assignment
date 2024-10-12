@@ -70,7 +70,7 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Future<void> _onLogOut(BuildContext context) async{
+  Future<void> _onLogOut(var context) async {
     await AuthControllers.clearUserData();
     Navigator.pushAndRemoveUntil(
       context,

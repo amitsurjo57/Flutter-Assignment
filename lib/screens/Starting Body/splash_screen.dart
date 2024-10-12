@@ -23,23 +23,32 @@ class _SplashScreenState extends State<SplashScreen> {
       () async{
         await AuthControllers.getAccessToken();
         if (AuthControllers.isLoggedIn()) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
+          navigateToHomeScreen();
         }else{
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LogInScreen(),
-            ),
-          );
+          navigateToLogInScreen();
         }
       },
     );
   }
+
+  void navigateToHomeScreen(){
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+    );
+  }
+
+  void navigateToLogInScreen(){
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LogInScreen(),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
