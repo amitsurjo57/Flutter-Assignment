@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greeting_app/data/controllers/auth_controllers.dart';
 import 'package:greeting_app/screens/Profile/profile_screen.dart';
 import 'package:greeting_app/screens/Starting%20Body/log_in_screen.dart';
 import 'package:greeting_app/utils/common_color.dart';
@@ -69,7 +70,8 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  void _onLogOut(BuildContext context) {
+  Future<void> _onLogOut(BuildContext context) async{
+    await AuthControllers.clearUserData();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(

@@ -47,6 +47,7 @@ class NetworkCaller {
       );
       printResponse(url, response);
       if (response.statusCode == 200) {
+
         final decodeData = jsonDecode(response.body);
 
         return NetworkResponse(
