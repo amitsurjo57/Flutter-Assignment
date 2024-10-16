@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greeting_app/screens/Main%20Body/canceled_screen.dart';
 import 'package:greeting_app/screens/Main%20Body/completed_screen.dart';
-import 'package:greeting_app/screens/Main%20Body/task_screen.dart';
+import 'package:greeting_app/screens/Main%20Body/new_task_screen.dart';
 import 'package:greeting_app/screens/Main%20Body/progress_screen.dart';
 import 'package:greeting_app/utils/common_color.dart';
 import 'package:greeting_app/widgets/Main%20App/tam_appbar.dart';
@@ -18,10 +18,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   List listScreen = const [
-    TaskScreen(),
+    NewTaskScreen(),
     CompletedScreen(),
     CanceledScreen(),
-    ProgressScreen(),
+    ProgressTasksScreen(),
   ];
 
   @override

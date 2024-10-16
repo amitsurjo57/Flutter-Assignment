@@ -10,4 +10,8 @@ class NetworkUrls {
   static String deleteTasks({required String id}){
     return '$_baseURL/deleteTask/$id';
   }
+
+  static String updateTaskStatus(String id, String newStatus){
+    return '$_baseURL//updateTaskStatus/$id/$newStatus';
+  }
 }

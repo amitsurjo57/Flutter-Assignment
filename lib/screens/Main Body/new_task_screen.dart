@@ -5,20 +5,29 @@ import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/screens/Main%20Body/create_new_task_screen.dart';
 import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
+import 'package:greeting_app/widgets/Common%20Widget/no_task_message.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Main%20App/counting_card.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
-class TaskScreen extends StatefulWidget {
-  const TaskScreen({super.key});
+class NewTaskScreen extends StatefulWidget {
+  const NewTaskScreen({super.key});
 
   @override
-  State<TaskScreen> createState() => _TaskScreenState();
+  State<NewTaskScreen> createState() => _NewTaskScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen> {
+class _NewTaskScreenState extends State<NewTaskScreen> {
   List<TaskWidget> taskList = [];
   bool _inProgress = false;
+  int _selectedIndex = 0;
+
+  List<String> listOfEditOption = [
+    'New',
+    'Completed',
+    'Canceled',
+    'Progress',
+  ];
 
   @override
   void initState() {
@@ -29,7 +38,7 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: floatingActionButton(context),
+      floatingActionButton: floatingActionButton(),
       body: RefreshIndicator(
         onRefresh: _getNewTasks,
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
@@ -39,7 +48,13 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Column(
             children: [
               countingHeader(),
-              mainTasks(context),
+              Visibility(
+                visible: taskList.isNotEmpty,
+                replacement: Expanded(
+                  child: NoTaskMessage(refresh: _getNewTasks),
+                ),
+                child: mainTasks(context),
+              ),
             ],
           ),
         ),
@@ -90,7 +105,7 @@ class _TaskScreenState extends State<TaskScreen> {
     );
   }
 
-  FloatingActionButton floatingActionButton(BuildContext context) {
+  FloatingActionButton floatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
         _onTapCreateTask(context);
@@ -123,7 +138,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 date: task['createdDate'],
                 status: task['status'],
                 statusColor: Colors.blue,
-                onEdit: () => _onTapEdit(context),
+                onEdit: () => _onTapEdit(task['_id']),
                 onDelete: () => _deleteTask(task['_id']),
               ),
             );
@@ -139,17 +154,17 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Future<void> _deleteTask(String id) async {
-    try{
+    try {
       await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
       _getNewTasks();
       _snackBar('Task Deleted');
       setState(() {});
-    }catch(e){
+    } catch (e) {
       _snackBar('Something went wrong');
     }
   }
 
-  void _onTapEdit(BuildContext context) {
+  void _onTapEdit(String id) {
     showDialog(
       context: context,
       builder: (context) {
@@ -157,11 +172,14 @@ class _TaskScreenState extends State<TaskScreen> {
           title: const Text('Edit Status'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: ['New', 'Completed', 'Cancelled', 'Progress'].map((e) {
+            children: listOfEditOption.map((e) {
+              int index =
+                  listOfEditOption.indexWhere((element) => element == e);
               return ListTile(
-                onTap: () {
-                  // TODO: On Tap in Task Status
-                },
+                onTap: () => setState(() => _selectedIndex = index),
+                selected: _selectedIndex == index,
+                selectedColor: Colors.green,
+                selectedTileColor: Colors.green[100],
                 title: Text(e),
               );
             }).toList(),
@@ -174,8 +192,18 @@ class _TaskScreenState extends State<TaskScreen> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                // TODO: On Edit Okay
+              onPressed: () async {
+                try {
+                  await NetworkCaller.getRequest(
+                    url: NetworkUrls.updateTaskStatus(
+                        id, listOfEditOption[_selectedIndex]),
+                  );
+                  _getNewTasks();
+                  _snackBar('Task Status Updated');
+                  setState(() {});
+                } catch (e) {
+                  _snackBar('Something went wrong');
+                }
               },
               child: const Text('Okay'),
             ),

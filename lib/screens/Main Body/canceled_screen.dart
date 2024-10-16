@@ -1,28 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:greeting_app/Model/Main%20App/task_model.dart';
+import 'package:greeting_app/data/models/network_response.dart';
+import 'package:greeting_app/data/services/network_caller.dart';
+import 'package:greeting_app/data/utils/network_urls.dart';
+import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
+import 'package:greeting_app/widgets/Common%20Widget/no_task_message.dart';
+import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
-class CanceledScreen extends StatelessWidget {
+class CanceledScreen extends StatefulWidget {
   const CanceledScreen({super.key});
+
+  @override
+  State<CanceledScreen> createState() => _CanceledScreenState();
+}
+
+class _CanceledScreenState extends State<CanceledScreen> {
+  List<TaskWidget> taskList = [];
+  bool _inProgress = false;
+  int _selectedIndex = 0;
+
+  List<String> listOfEditOption = [
+    'New',
+    'Completed',
+    'Canceled',
+    'Progress',
+  ];
+
+  @override
+  void initState() {
+    _getCanceledTasks();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TaskWidget(
-        taskModel: TaskModel(
-          title: 'This is title',
-          subTitle: 'This is subTitle',
-          date: '04/10/2024',
-          status: 'Cancelled',
-          statusColor: Colors.red,
-          onEdit: () => _onTapEdit(context),
-          onDelete: () {},
+      body: RefreshIndicator(
+        onRefresh: _getCanceledTasks,
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
+        child: Visibility(
+          visible: !_inProgress,
+          replacement: const CenterProgressIndicator(),
+          child: Visibility(
+            visible: taskList.isNotEmpty,
+            replacement: NoTaskMessage(refresh: _getCanceledTasks),
+            child: ListView.separated(
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              itemCount: taskList.length,
+              itemBuilder: (context, index) => taskList[index],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  _onTapEdit(BuildContext context) {
+  Future<void> _getCanceledTasks() async {
+    try {
+      _inProgress = true;
+      taskList.clear();
+      setState(() {});
+      final NetworkResponse response = await NetworkCaller.getRequest(
+        url: NetworkUrls.tasksList(taskStatus: 'Canceled'),
+      );
+
+      if (response.isSuccess) {
+        _inProgress = false;
+        setState(() {});
+        Map<String, dynamic> newTaskResponse = response.responseData;
+
+        for (var task in newTaskResponse['data']) {
+          setState(() {
+            TaskWidget newTask = TaskWidget(
+              taskModel: TaskModel(
+                title: task['title'],
+                subTitle: task['description'],
+                date: task['createdDate'],
+                status: task['status'],
+                statusColor: Colors.red,
+                onEdit: () => _onTapEdit(task['_id']),
+                onDelete: () => _deleteTask(task['_id']),
+              ),
+            );
+            taskList.add(newTask);
+          });
+        }
+      } else {
+        _snackBar(response.errorMessage);
+      }
+    } catch (e) {
+      _snackBar(e.toString());
+    }
+  }
+
+  void _onTapEdit(String id) {
     showDialog(
       context: context,
       builder: (context) {
@@ -30,9 +102,14 @@ class CanceledScreen extends StatelessWidget {
           title: const Text('Edit Status'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: ['New', 'Completed', 'Cancelled', 'Progress'].map((e) {
+            children: listOfEditOption.map((e) {
+              int index =
+              listOfEditOption.indexWhere((element) => element == e);
               return ListTile(
-                onTap: () {},
+                onTap: () => setState(() => _selectedIndex = index),
+                selected: _selectedIndex == index,
+                selectedColor: Colors.green,
+                selectedTileColor: Colors.green[100],
                 title: Text(e),
               );
             }).toList(),
@@ -45,12 +122,39 @@ class CanceledScreen extends StatelessWidget {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () async{
+                try {
+                  await NetworkCaller.getRequest(
+                    url: NetworkUrls.updateTaskStatus(
+                        id, listOfEditOption[_selectedIndex]),
+                  );
+                  _getCanceledTasks();
+                  _snackBar('Task Status Updated');
+                  setState(() {});
+                } catch (e) {
+                  _snackBar('Something went wrong');
+                }
+              },
               child: const Text('Okay'),
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> _deleteTask(String id) async {
+    try {
+      await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
+      _getCanceledTasks();
+      _snackBar('Task Deleted');
+      setState(() {});
+    } catch (e) {
+      _snackBar('Something went wrong');
+    }
+  }
+
+  void _snackBar(String msg) {
+    mySnackBar(context, msg);
   }
 }

@@ -4,6 +4,7 @@ import 'package:greeting_app/data/models/network_response.dart';
 import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
+import 'package:greeting_app/widgets/Common%20Widget/no_task_message.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
@@ -17,10 +18,18 @@ class CompletedScreen extends StatefulWidget {
 class _CompletedScreenState extends State<CompletedScreen> {
   List<TaskWidget> taskList = [];
   bool _inProgress = false;
+  int _selectedIndex = 0;
+
+  List<String> listOfEditOption = [
+    'New',
+    'Completed',
+    'Canceled',
+    'Progress',
+  ];
 
   @override
   void initState() {
-    _getCompletedTask();
+    _getCompletedTasks();
     super.initState();
   }
 
@@ -28,12 +37,14 @@ class _CompletedScreenState extends State<CompletedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: _getCompletedTask,
+        onRefresh: _getCompletedTasks,
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
         child: Visibility(
           visible: !_inProgress,
           replacement: const CenterProgressIndicator(),
-          child: Expanded(
+          child: Visibility(
+            visible: taskList.isNotEmpty,
+            replacement: NoTaskMessage(refresh: _getCompletedTasks),
             child: ListView.separated(
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemCount: taskList.length,
@@ -45,7 +56,7 @@ class _CompletedScreenState extends State<CompletedScreen> {
     );
   }
 
-  Future<void> _getCompletedTask() async {
+  Future<void> _getCompletedTasks() async {
     try {
       _inProgress = true;
       taskList.clear();
@@ -67,8 +78,8 @@ class _CompletedScreenState extends State<CompletedScreen> {
                 subTitle: task['description'],
                 date: task['createdDate'],
                 status: task['status'],
-                statusColor: Colors.blue,
-                onEdit: () => _onTapEdit(context),
+                statusColor: Colors.green,
+                onEdit: () => _onTapEdit(task['_id']),
                 onDelete: () => _deleteTask(task['_id']),
               ),
             );
@@ -76,14 +87,14 @@ class _CompletedScreenState extends State<CompletedScreen> {
           });
         }
       } else {
-        // _snackBar(response.errorMessage);
+        _snackBar(response.errorMessage);
       }
     } catch (e) {
-      // _snackBar(e.toString());
+      _snackBar(e.toString());
     }
   }
 
-  void _onTapEdit(BuildContext context) {
+  void _onTapEdit(String id) {
     showDialog(
       context: context,
       builder: (context) {
@@ -92,8 +103,13 @@ class _CompletedScreenState extends State<CompletedScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: ['New', 'Completed', 'Cancelled', 'Progress'].map((e) {
+              int index =
+              listOfEditOption.indexWhere((element) => element == e);
               return ListTile(
-                onTap: () {},
+                onTap: () => setState(() => _selectedIndex = index),
+                selected: _selectedIndex == index,
+                selectedColor: Colors.green,
+                selectedTileColor: Colors.green[100],
                 title: Text(e),
               );
             }).toList(),
@@ -106,7 +122,19 @@ class _CompletedScreenState extends State<CompletedScreen> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () async{
+                try {
+                  await NetworkCaller.getRequest(
+                    url: NetworkUrls.updateTaskStatus(
+                        id, listOfEditOption[_selectedIndex]),
+                  );
+                  _getCompletedTasks();
+                  _snackBar('Task Status Updated');
+                  setState(() {});
+                } catch (e) {
+                  _snackBar('Something went wrong');
+                }
+              },
               child: const Text('Okay'),
             ),
           ],
@@ -118,7 +146,7 @@ class _CompletedScreenState extends State<CompletedScreen> {
   Future<void> _deleteTask(String id) async {
     try {
       await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
-      _getCompletedTask();
+      _getCompletedTasks();
       _snackBar('Task Deleted');
       setState(() {});
     } catch (e) {
