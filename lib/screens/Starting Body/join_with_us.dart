@@ -4,7 +4,7 @@ import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/ui/navigate_to_signin_page.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
-import 'package:greeting_app/widgets/Starting%20App/center_progress_indicator.dart';
+import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
 import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 import 'package:greeting_app/widgets/Common%20Widget/my_button.dart';

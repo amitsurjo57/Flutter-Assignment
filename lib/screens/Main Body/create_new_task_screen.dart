@@ -6,7 +6,7 @@ import 'package:greeting_app/widgets/Common%20Widget/my_button.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Common%20Widget/user_text_field.dart';
 import 'package:greeting_app/widgets/Main%20App/tam_appbar.dart';
-import 'package:greeting_app/widgets/Starting%20App/center_progress_indicator.dart';
+import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
 
 class CreateNewTaskScreen extends StatefulWidget {
   const CreateNewTaskScreen({super.key});
@@ -102,9 +102,15 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
 
     if (response.isSuccess) {
       _snackBar('New Task Created');
+      _clearTextFields();
     } else {
       _snackBar(response.errorMessage);
     }
+  }
+
+  void _clearTextFields(){
+    _titleController.clear();
+    _descriptionController.clear();
   }
 
   void _snackBar(String msg) {
