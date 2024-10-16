@@ -1,30 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:greeting_app/Model/Main%20App/task_model.dart';
+import 'package:greeting_app/data/models/network_response.dart';
+import 'package:greeting_app/data/services/network_caller.dart';
+import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/screens/Main%20Body/create_new_task_screen.dart';
+import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Main%20App/counting_card.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
+import 'package:greeting_app/widgets/Starting%20App/center_progress_indicator.dart';
 
-class TaskScreen extends StatelessWidget {
+class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
+
+  @override
+  State<TaskScreen> createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends State<TaskScreen> {
+  List<TaskWidget> taskList = [];
+  bool _inProgress = false;
+
+  @override
+  void initState() {
+    _getNewTasks();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: floatingActionButton(context),
-      body: Column(
-        children: [
-          countingHeader(),
-          mainTasks(context),
-        ],
+      body: RefreshIndicator(
+        onRefresh: _getNewTasks,
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
+        child: Visibility(
+          visible: !_inProgress,
+          replacement: const CenterProgressIndicator(),
+          child: Column(
+            children: [
+              countingHeader(),
+              mainTasks(context),
+            ],
+          ),
+        ),
       ),
-    );
-  }
-
-  FloatingActionButton floatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => _onTapCreateTask(context),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      child: const Icon(Icons.add, size: 32),
     );
   }
 
@@ -63,21 +82,71 @@ class TaskScreen extends StatelessWidget {
 
   Expanded mainTasks(BuildContext context) {
     return Expanded(
-      child: TaskWidget(
-        itemCount: 10,
-        taskModel: TaskModel(
-          title: 'This is title',
-          subTitle: 'This is subTitle',
-          date: '04/10/2024',
-          status: 'New',
-          statusColor: Colors.blue,
-          onEdit: () => _onTapEdit(context),
-          onDelete: () {
-            // TODO: On delete Task
-          },
-        ),
+      child: ListView.separated(
+        separatorBuilder: (context, index) => const SizedBox(height: 16),
+        itemCount: taskList.length,
+        itemBuilder: (context, index) => taskList[index],
       ),
     );
+  }
+
+  FloatingActionButton floatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        _onTapCreateTask(context);
+      },
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      child: const Icon(Icons.add, size: 32),
+    );
+  }
+
+  Future<void> _getNewTasks() async {
+    try {
+      _inProgress = true;
+      taskList.clear();
+      setState(() {});
+      final NetworkResponse response = await NetworkCaller.getRequest(
+        url: NetworkUrls.tasksList(taskStatus: 'New'),
+      );
+
+      if (response.isSuccess) {
+        _inProgress = false;
+        setState(() {});
+        Map<String, dynamic> newTaskResponse = response.responseData;
+
+        for (var task in newTaskResponse['data']) {
+          setState(() {
+            TaskWidget newTask = TaskWidget(
+              taskModel: TaskModel(
+                title: task['title'],
+                subTitle: task['description'],
+                date: task['createdDate'],
+                status: task['status'],
+                statusColor: Colors.blue,
+                onEdit: () => _onTapEdit(context),
+                onDelete: () => _deleteTask(task['_id']),
+              ),
+            );
+            taskList.add(newTask);
+          });
+        }
+      } else {
+        _snackBar(response.errorMessage);
+      }
+    } catch (e) {
+      _snackBar(e.toString());
+    }
+  }
+
+  Future<void> _deleteTask(String id) async {
+    try{
+      await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
+      _getNewTasks();
+      _snackBar('Task Deleted');
+      setState(() {});
+    }catch(e){
+      _snackBar('Something went wrong');
+    }
   }
 
   void _onTapEdit(BuildContext context) {
@@ -123,5 +192,9 @@ class TaskScreen extends StatelessWidget {
         builder: (context) => const CreateNewTaskScreen(),
       ),
     );
+  }
+
+  void _snackBar(String msg) {
+    mySnackBar(context, msg);
   }
 }

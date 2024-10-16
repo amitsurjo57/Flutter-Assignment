@@ -1,7 +1,9 @@
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:greeting_app/data/controllers/auth_controllers.dart';
 import 'package:greeting_app/data/models/network_response.dart';
+import 'package:greeting_app/main.dart';
+import 'package:greeting_app/screens/Starting%20Body/log_in_screen.dart';
 import 'package:http/http.dart';
 
 class NetworkCaller {
@@ -9,7 +11,10 @@ class NetworkCaller {
     try {
       Uri uri = Uri.parse(url);
       debugPrint(url);
-      final Response response = await get(uri);
+      final Response response = await get(
+        uri,
+        headers: {'token' : AuthControllers.accessToken!},
+      );
       printResponse(url, response);
       if (response.statusCode == 200) {
         final decodeData = jsonDecode(response.body);
@@ -42,18 +47,33 @@ class NetworkCaller {
       debugPrint(url);
       final Response response = await post(
         uri,
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'token': AuthControllers.accessToken.toString(),
+        },
         body: jsonEncode(body),
       );
       printResponse(url, response);
       if (response.statusCode == 200) {
-
         final decodeData = jsonDecode(response.body);
 
         return NetworkResponse(
           isSuccess: true,
           statusCode: response.statusCode,
           responseData: decodeData,
+        );
+      } else if (response.statusCode == 401) {
+        Navigator.pushAndRemoveUntil(
+          MyApp.navigatorKey.currentContext!,
+          MaterialPageRoute(
+            builder: (_) => const LogInScreen(),
+          ),
+          (_) => false,
+        );
+        return NetworkResponse(
+          isSuccess: true,
+          statusCode: response.statusCode,
+          errorMessage: 'Your are expired!',
         );
       } else {
         return NetworkResponse(
@@ -72,7 +92,7 @@ class NetworkCaller {
 
   static void printResponse(String url, Response response) {
     debugPrint(
-      'URL: $url\nRESPONSE CODE: ${response.statusCode}\nBODY: ${response.body}',
+      'URL: $url\nRESPONSE CODE: ${response.statusCode}\nBODY: ${response.body}\nTOKEN: ${AuthControllers.accessToken}',
     );
   }
 }

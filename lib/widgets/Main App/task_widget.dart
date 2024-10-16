@@ -3,21 +3,17 @@ import 'package:greeting_app/Model/Main%20App/task_model.dart';
 
 class TaskWidget extends StatelessWidget {
   final TaskModel taskModel;
-  final int itemCount;
 
   const TaskWidget({
     super.key,
     required this.taskModel,
-    required this.itemCount,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(12),
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
-      itemCount: itemCount,
-      itemBuilder: (context, index) => Card(
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Card(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(

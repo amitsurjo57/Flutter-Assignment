@@ -9,7 +9,6 @@ class CompletedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: TaskWidget(
-        itemCount: 10,
         taskModel: TaskModel(
           title: 'This is title',
           subTitle: 'This is subTitle',
