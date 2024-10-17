@@ -61,7 +61,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                 replacement: Expanded(
                   child: NoTaskMessage(refresh: _rebuild),
                 ),
-                child: mainTasks(context),
+                child: mainTasks(),
               ),
             ],
           ),
@@ -89,7 +89,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     );
   }
 
-  Expanded mainTasks(BuildContext context) {
+  Expanded mainTasks() {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => const SizedBox(height: 16),
@@ -101,9 +101,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   FloatingActionButton floatingActionButton() {
     return FloatingActionButton(
-      onPressed: () {
-        _onTapCreateTask(context);
-      },
+      onPressed: _onTapCreateTask,
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       child: const Icon(Icons.add, size: 32),
     );
@@ -241,13 +239,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     }
   }
 
-  void _onTapCreateTask(BuildContext context) {
-    Navigator.push(
+  Future<void> _onTapCreateTask() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const CreateNewTaskScreen(),
       ),
     );
+    _rebuild();
   }
 
   void _snackBar(String msg) {
