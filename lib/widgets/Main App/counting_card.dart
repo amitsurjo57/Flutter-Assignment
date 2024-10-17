@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:greeting_app/Model/Main%20App/task_counter_model.dart';
 
 class CountingCard extends StatelessWidget {
-  final String task;
-  final int numberOfTask;
+  final TaskCounterModel model;
 
   const CountingCard({
     super.key,
-    required this.task,
-    required this.numberOfTask,
+    required this.model,
   });
 
   @override
@@ -21,14 +20,14 @@ class CountingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '$numberOfTask',
+                '${model.taskNumber}',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                task,
+                model.taskName,
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,

@@ -18,7 +18,8 @@ class CompletedScreen extends StatefulWidget {
 class _CompletedScreenState extends State<CompletedScreen> {
   List<TaskWidget> taskList = [];
   bool _inProgress = false;
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
+  String address = 'Completed';
 
   List<String> listOfEditOption = [
     'New',
@@ -98,49 +99,60 @@ class _CompletedScreenState extends State<CompletedScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Edit Status'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: ['New', 'Completed', 'Cancelled', 'Progress'].map((e) {
-              int index =
-              listOfEditOption.indexWhere((element) => element == e);
-              return ListTile(
-                onTap: () => setState(() => _selectedIndex = index),
-                selected: _selectedIndex == index,
-                selectedColor: Colors.green,
-                selectedTileColor: Colors.green[100],
-                title: Text(e),
-              );
-            }).toList(),
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: const Text('Edit Status'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: listOfEditOption.map((e) {
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = listOfEditOption
+                          .indexWhere((element) => element == e);
+                      address = e;
+                    });
+                  },
+                  selected: _selectedIndex ==
+                      listOfEditOption.indexWhere((element) => element == e),
+                  selectedColor: Colors.green,
+                  selectedTileColor: Colors.green[100],
+                  title: Text(e),
+                );
+              }).toList(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: _onPopEditOptionScreen,
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => _onTapEditOkayOption(id, setState),
+                child: const Text('Okay'),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async{
-                try {
-                  await NetworkCaller.getRequest(
-                    url: NetworkUrls.updateTaskStatus(
-                        id, listOfEditOption[_selectedIndex]),
-                  );
-                  _getCompletedTasks();
-                  _snackBar('Task Status Updated');
-                  setState(() {});
-                } catch (e) {
-                  _snackBar('Something went wrong');
-                }
-              },
-              child: const Text('Okay'),
-            ),
-          ],
         );
       },
     );
+  }
+
+  void _onPopEditOptionScreen() {
+    Navigator.pop(context);
+  }
+
+  Future<void> _onTapEditOkayOption(String id, StateSetter setState) async {
+    try {
+      await NetworkCaller.getRequest(
+        url: NetworkUrls.updateTaskStatus(id, listOfEditOption[_selectedIndex]),
+      );
+      _getCompletedTasks();
+      _onPopEditOptionScreen();
+      _snackBar('Task Status Updated to $address');
+      setState(() {});
+    } catch (e) {
+      _snackBar('Something went wrong');
+    }
   }
 
   Future<void> _deleteTask(String id) async {

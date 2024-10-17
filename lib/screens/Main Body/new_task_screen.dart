@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greeting_app/Model/Main%20App/task_counter_model.dart';
 import 'package:greeting_app/Model/Main%20App/task_model.dart';
 import 'package:greeting_app/data/models/network_response.dart';
 import 'package:greeting_app/data/services/network_caller.dart';
@@ -19,8 +20,10 @@ class NewTaskScreen extends StatefulWidget {
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
   List<TaskWidget> taskList = [];
+  List<CountingCard> taskCounterList = [];
   bool _inProgress = false;
   int _selectedIndex = 0;
+  String address = 'New';
 
   List<String> listOfEditOption = [
     'New',
@@ -31,8 +34,13 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   @override
   void initState() {
-    _getNewTasks();
+    _rebuild();
     super.initState();
+  }
+
+  Future<void> _rebuild() async {
+    await _getTaskCounter();
+    await _getNewTasks();
   }
 
   @override
@@ -40,7 +48,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     return Scaffold(
       floatingActionButton: floatingActionButton(),
       body: RefreshIndicator(
-        onRefresh: _getNewTasks,
+        onRefresh: _rebuild,
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
         child: Visibility(
           visible: !_inProgress,
@@ -51,7 +59,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               Visibility(
                 visible: taskList.isNotEmpty,
                 replacement: Expanded(
-                  child: NoTaskMessage(refresh: _getNewTasks),
+                  child: NoTaskMessage(refresh: _rebuild),
                 ),
                 child: mainTasks(context),
               ),
@@ -63,33 +71,19 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Widget countingHeader() {
-    return const Padding(
-      padding: EdgeInsets.only(
+    return Padding(
+      padding: const EdgeInsets.only(
         left: 12,
         right: 12,
         top: 12,
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            CountingCard(
-              numberOfTask: 09,
-              task: 'Canceled',
-            ),
-            CountingCard(
-              numberOfTask: 09,
-              task: 'Completed',
-            ),
-            CountingCard(
-              numberOfTask: 09,
-              task: 'Progress',
-            ),
-            CountingCard(
-              numberOfTask: 09,
-              task: 'New Task',
-            ),
-          ],
+      child: SizedBox(
+        height: 100,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          separatorBuilder: (context, index) => const SizedBox(width: 8),
+          itemCount: taskCounterList.length,
+          itemBuilder: (context, index) => taskCounterList[index],
         ),
       ),
     );
@@ -156,9 +150,36 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Future<void> _deleteTask(String id) async {
     try {
       await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
-      _getNewTasks();
+      _rebuild();
       _snackBar('Task Deleted');
       setState(() {});
+    } catch (e) {
+      _snackBar('Something went wrong');
+    }
+  }
+
+  Future<void> _getTaskCounter() async {
+    try {
+      NetworkResponse response =
+          await NetworkCaller.getRequest(url: NetworkUrls.taskCounter);
+      if (response.isSuccess) {
+        taskCounterList.clear();
+        Map<String, dynamic> responseBody = response.responseData;
+
+        for (var counter in responseBody['data']) {
+          CountingCard countingCard = CountingCard(
+            model: TaskCounterModel(
+              taskNumber: counter['sum'] < 10
+                  ? '0${counter['sum']}'
+                  : '${counter['sum']}',
+              taskName: counter['_id'],
+            ),
+          );
+          taskCounterList.add(countingCard);
+        }
+      } else {
+        _snackBar(response.errorMessage);
+      }
     } catch (e) {
       _snackBar('Something went wrong');
     }
@@ -168,49 +189,56 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Edit Status'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: listOfEditOption.map((e) {
-              int index =
-                  listOfEditOption.indexWhere((element) => element == e);
-              return ListTile(
-                onTap: () => setState(() => _selectedIndex = index),
-                selected: _selectedIndex == index,
-                selectedColor: Colors.green,
-                selectedTileColor: Colors.green[100],
-                title: Text(e),
-              );
-            }).toList(),
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: const Text('Edit Status'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: listOfEditOption.map((e) {
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = listOfEditOption
+                          .indexWhere((element) => element == e);
+                      address = e;
+                    });
+                  },
+                  selected: _selectedIndex ==
+                      listOfEditOption.indexWhere((element) => element == e),
+                  selectedColor: Colors.green,
+                  selectedTileColor: Colors.green[100],
+                  title: Text(e),
+                );
+              }).toList(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: _onPopEditOptionScreen,
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => _onTapEditOkayOption(id, setState),
+                child: const Text('Okay'),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                try {
-                  await NetworkCaller.getRequest(
-                    url: NetworkUrls.updateTaskStatus(
-                        id, listOfEditOption[_selectedIndex]),
-                  );
-                  _getNewTasks();
-                  _snackBar('Task Status Updated');
-                  setState(() {});
-                } catch (e) {
-                  _snackBar('Something went wrong');
-                }
-              },
-              child: const Text('Okay'),
-            ),
-          ],
         );
       },
     );
+  }
+
+  Future<void> _onTapEditOkayOption(String id, StateSetter setState) async {
+    try {
+      await NetworkCaller.getRequest(
+        url: NetworkUrls.updateTaskStatus(id, listOfEditOption[_selectedIndex]),
+      );
+      _rebuild();
+      _onPopEditOptionScreen();
+      _snackBar('Task Status Updated to $address');
+      setState(() {});
+    } catch (e) {
+      _snackBar('Something went wrong');
+    }
   }
 
   void _onTapCreateTask(BuildContext context) {
@@ -224,5 +252,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   void _snackBar(String msg) {
     mySnackBar(context, msg);
+  }
+
+  void _onPopEditOptionScreen() {
+    Navigator.pop(context);
   }
 }
