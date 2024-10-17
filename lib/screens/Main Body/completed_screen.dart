@@ -75,13 +75,13 @@ class _CompletedScreenState extends State<CompletedScreen> {
           setState(() {
             TaskWidget newTask = TaskWidget(
               taskModel: TaskModel(
-                title: task['title'],
-                subTitle: task['description'],
-                date: task['createdDate'],
-                status: task['status'],
+                title: task['title'] ?? '',
+                subTitle: task['description'] ?? '',
+                date: task['createdDate'] ?? '',
+                status: task['status'] ?? '',
                 statusColor: Colors.green,
-                onEdit: () => _onTapEdit(task['_id']),
-                onDelete: () => _deleteTask(task['_id']),
+                onEdit: () => _onTapEdit(task['_id'] ?? ''),
+                onDelete: () => _deleteTask(task['_id'] ?? ''),
               ),
             );
             taskList.add(newTask);
