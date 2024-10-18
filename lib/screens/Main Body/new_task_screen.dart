@@ -39,8 +39,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Future<void> _rebuild() async {
-    _getTaskCounter();
-    _getNewTasks();
+    await _getTaskCounter();
+    await _getNewTasks();
   }
 
   @override
