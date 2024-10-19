@@ -25,6 +25,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   int _selectedIndex = 0;
   String address = 'New';
 
+
   List<String> listOfEditOption = [
     'New',
     'Completed',
