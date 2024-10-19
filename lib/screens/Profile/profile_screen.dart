@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greeting_app/data/controllers/auth_controllers.dart';
 import 'package:greeting_app/data/models/network_response.dart';
 import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
@@ -149,6 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (response.isSuccess) {
         _snackBar('Profile Updated Successfully. Log In again.');
+        await AuthControllers.clearUserData();
         _navigateToLogInScreen();
       } else {
         _inProgressProfileUpdate = false;
