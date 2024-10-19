@@ -20,6 +20,7 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   bool _inProgress = false;
+  bool _shouldRefreshPreviousPage = false;
 
   @override
   void dispose() {
@@ -30,47 +31,56 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: const TamAppbar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 52,
-        ),
-        child: Form(
-          key: _globalKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Add New Task',
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              UserTextField(
-                controller: _titleController,
-                hintText: 'Subject',
-                validateMSG: 'Enter the subject of task',
-              ),
-              const SizedBox(height: 12),
-              UserTextField(
-                controller: _descriptionController,
-                hintText: 'Description',
-                maxLine: 8,
-                validateMSG: 'Enter the description of task',
-              ),
-              const SizedBox(height: 12),
-              Visibility(
-                visible: !_inProgress,
-                replacement: const CenterProgressIndicator(),
-                child: MyButton(
-                  onPressed: _onTap,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
+        Navigator.pop(context, _shouldRefreshPreviousPage);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: const TamAppbar(),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 52,
+          ),
+          child: Form(
+            key: _globalKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Add New Task',
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                UserTextField(
+                  controller: _titleController,
+                  hintText: 'Subject',
+                  validateMSG: 'Enter the subject of task',
+                ),
+                const SizedBox(height: 12),
+                UserTextField(
+                  controller: _descriptionController,
+                  hintText: 'Description',
+                  maxLine: 8,
+                  validateMSG: 'Enter the description of task',
+                ),
+                const SizedBox(height: 12),
+                Visibility(
+                  visible: !_inProgress,
+                  replacement: const CenterProgressIndicator(),
+                  child: MyButton(
+                    onPressed: _onTap,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -101,6 +111,7 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
     setState(() {});
 
     if (response.isSuccess) {
+      _shouldRefreshPreviousPage = true;
       _snackBar('New Task Created');
       _clearTextFields();
     } else {
@@ -108,7 +119,7 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
     }
   }
 
-  void _clearTextFields(){
+  void _clearTextFields() {
     _titleController.clear();
     _descriptionController.clear();
   }

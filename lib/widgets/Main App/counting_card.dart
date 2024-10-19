@@ -20,7 +20,7 @@ class CountingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${model.taskNumber}',
+                model.taskNumber,
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

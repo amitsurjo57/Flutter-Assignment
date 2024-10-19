@@ -228,7 +228,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Future<void> _onTapEditOkayOption(String id, StateSetter setState) async {
     try {
       await NetworkCaller.getRequest(
-        url: NetworkUrls.updateTaskStatus(id, listOfEditOption[_selectedIndex]),
+        url: NetworkUrls.updateTaskStatus(
+          id: id,
+          newStatus: listOfEditOption[_selectedIndex],
+        ),
       );
       _rebuild();
       _onPopEditOptionScreen();
@@ -240,13 +243,15 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Future<void> _onTapCreateTask() async {
-    await Navigator.push(
+    final bool? result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const CreateNewTaskScreen(),
       ),
     );
-    _rebuild();
+    if (result!) {
+      _rebuild();
+    }
   }
 
   void _snackBar(String msg) {

@@ -140,7 +140,10 @@ class _ProgressTasksScreenState extends State<ProgressTasksScreen> {
   Future<void> _onTapEditOkayOption(String id, StateSetter setState) async {
     try {
       await NetworkCaller.getRequest(
-        url: NetworkUrls.updateTaskStatus(id, listOfEditOption[_selectedIndex]),
+        url: NetworkUrls.updateTaskStatus(
+          id: id,
+          newStatus: listOfEditOption[_selectedIndex],
+        ),
       );
       _getProgressTasks();
       _onPopEditOptionScreen();
