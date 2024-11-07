@@ -48,7 +48,7 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Amit Banik Surjo',
+                  AuthControllers.userData?.fullName ?? ' ',
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: Colors.white,
                         fontSize: 16,
@@ -56,7 +56,7 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                 ),
                 Text(
-                  'surjo@gmail.com',
+                  AuthControllers.userData?.email ?? ' ',
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
