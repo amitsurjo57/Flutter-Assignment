@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       () async{
         await AuthControllers.getAccessToken();
         if (AuthControllers.isLoggedIn()) {
+          await AuthControllers.getUserData();
           navigateToHomeScreen();
         }else{
           navigateToLogInScreen();

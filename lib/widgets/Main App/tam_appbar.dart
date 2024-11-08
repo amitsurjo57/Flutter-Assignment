@@ -12,6 +12,7 @@ class TamAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.isProfileScreenOpen = false,
   });
 
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

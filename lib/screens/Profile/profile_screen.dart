@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:greeting_app/data/controllers/auth_controllers.dart';
 import 'package:greeting_app/data/models/network_response.dart';
@@ -11,6 +13,7 @@ import 'package:greeting_app/widgets/Common%20Widget/user_text_field.dart';
 import 'package:greeting_app/widgets/Main%20App/tam_appbar.dart';
 import 'package:greeting_app/widgets/Starting%20App/background_widget.dart';
 import 'package:greeting_app/widgets/Starting%20App/password_text_field.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -34,6 +37,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _lastName = '';
   String _mobile = '';
   String _password = '';
+
+  XFile? _selectedImage;
 
   @override
   void initState() {
@@ -140,6 +145,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         "password": _passwordController.text,
       };
 
+      if (_selectedImage != null) {
+        List<int> imageBytes = await _selectedImage!.readAsBytes();
+        String convertedImage = base64Encode(imageBytes);
+        profileBody["photo"] = convertedImage;
+      }
+
       NetworkResponse response = await NetworkCaller.postRequest(
         url: NetworkUrls.profileUpdate,
         body: profileBody,
@@ -224,36 +235,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Container photo() {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            width: 80,
-            height: 56,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
+  Widget photo() {
+    return GestureDetector(
+      onTap: _pickImage,
+      child: Container(
+        width: double.infinity,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              width: 80,
+              height: 56,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
+              ),
+              child: const Text(
+                "Photos",
+                style: TextStyle(color: Colors.white),
               ),
             ),
-            child: const Text(
-              "Photos",
-              style: TextStyle(color: Colors.white),
+            const SizedBox(width: 20),
+            Expanded(
+              child: SizedBox(
+                child: Text(_getPickedImage()),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _pickImage() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? pickedImage =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      _selectedImage = pickedImage;
+      setState(() {});
+    }
+  }
+
+  String _getPickedImage() {
+    if (_selectedImage != null) {
+      return _selectedImage!.name;
+    }
+    return 'Select Photo';
   }
 
   Text heading() {
