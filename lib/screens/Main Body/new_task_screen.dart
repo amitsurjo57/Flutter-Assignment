@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:greeting_app/Model/Main%20App/task_counter_model.dart';
-import 'package:greeting_app/Model/Main%20App/task_model.dart';
 import 'package:greeting_app/data/models/network_response.dart';
 import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/screens/Main%20Body/create_new_task_screen.dart';
+import 'package:greeting_app/ui/controllers/new_task_controller.dart';
 import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
 import 'package:greeting_app/widgets/Common%20Widget/no_task_message.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
@@ -21,10 +22,9 @@ class NewTaskScreen extends StatefulWidget {
 class _NewTaskScreenState extends State<NewTaskScreen> {
   List<TaskWidget> taskList = [];
   List<CountingCard> taskCounterList = [];
-  bool _inProgress = false;
-  int _selectedIndex = 0;
   String address = 'New';
 
+  final NewTaskController _newTaskController = Get.find<NewTaskController>();
 
   List<String> listOfEditOption = [
     'New',
@@ -51,22 +51,30 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       body: RefreshIndicator(
         onRefresh: _rebuild,
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
-        child: Visibility(
-          visible: !_inProgress,
-          replacement: const CenterProgressIndicator(),
-          child: Column(
-            children: [
-              countingHeader(),
-              Visibility(
-                visible: taskList.isNotEmpty,
-                replacement: Expanded(
-                  child: NoTaskMessage(refresh: _rebuild),
+        child: GetBuilder(
+            init: NewTaskController(),
+            builder: (context) {
+              return Visibility(
+                visible: !context.inProgress,
+                replacement: const CenterProgressIndicator(),
+                child: Column(
+                  children: [
+                    countingHeader(),
+                    GetBuilder(
+                        init: NewTaskController(),
+                        builder: (context) {
+                          return Visibility(
+                            visible: context.taskList.isNotEmpty,
+                            replacement: Expanded(
+                              child: NoTaskMessage(refresh: _rebuild),
+                            ),
+                            child: mainTasks(),
+                          );
+                        }),
+                  ],
                 ),
-                child: mainTasks(),
-              ),
-            ],
-          ),
-        ),
+              );
+            }),
       ),
     );
   }
@@ -94,8 +102,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     return Expanded(
       child: ListView.separated(
         separatorBuilder: (context, index) => const SizedBox(height: 16),
-        itemCount: taskList.length,
-        itemBuilder: (context, index) => taskList[index],
+        itemCount: _newTaskController.taskList.length,
+        itemBuilder: (context, index) => _newTaskController.taskList[index],
       ),
     );
   }
@@ -110,50 +118,13 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   Future<void> _getNewTasks() async {
     try {
-      _inProgress = true;
-      taskList.clear();
-      setState(() {});
-      final NetworkResponse response = await NetworkCaller.getRequest(
-        url: NetworkUrls.tasksList(taskStatus: 'New'),
-      );
+      bool isSuccess = await _newTaskController.getNewTasks();
 
-      if (response.isSuccess) {
-        _inProgress = false;
-        setState(() {});
-        Map<String, dynamic> newTaskResponse = response.responseData;
-
-        for (var task in newTaskResponse['data']) {
-          setState(() {
-            TaskWidget newTask = TaskWidget(
-              taskModel: TaskModel(
-                title: task['title'] ?? '',
-                subTitle: task['description'] ?? '',
-                date: task['createdDate'] ?? '',
-                status: task['status'] ?? '',
-                statusColor: Colors.blue,
-                onEdit: () => _onTapEdit(task['_id'] ?? ''),
-                onDelete: () => _deleteTask(task['_id'] ?? ''),
-              ),
-            );
-            taskList.add(newTask);
-          });
-        }
-      } else {
-        _snackBar(response.errorMessage);
+      if (!isSuccess) {
+        _snackBar(_newTaskController.errorMessage!);
       }
     } catch (e) {
       _snackBar(e.toString());
-    }
-  }
-
-  Future<void> _deleteTask(String id) async {
-    try {
-      await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
-      _rebuild();
-      _snackBar('Task Deleted');
-      setState(() {});
-    } catch (e) {
-      _snackBar('Something went wrong');
     }
   }
 
@@ -179,65 +150,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       } else {
         _snackBar(response.errorMessage);
       }
-    } catch (e) {
-      _snackBar('Something went wrong');
-    }
-  }
-
-  void _onTapEdit(String id) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) => AlertDialog(
-            title: const Text('Edit Status'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: listOfEditOption.map((e) {
-                return ListTile(
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = listOfEditOption
-                          .indexWhere((element) => element == e);
-                      address = e;
-                    });
-                  },
-                  selected: _selectedIndex ==
-                      listOfEditOption.indexWhere((element) => element == e),
-                  selectedColor: Colors.green,
-                  selectedTileColor: Colors.green[100],
-                  title: Text(e),
-                );
-              }).toList(),
-            ),
-            actions: [
-              TextButton(
-                onPressed: _onPopEditOptionScreen,
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => _onTapEditOkayOption(id, setState),
-                child: const Text('Okay'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _onTapEditOkayOption(String id, StateSetter setState) async {
-    try {
-      await NetworkCaller.getRequest(
-        url: NetworkUrls.updateTaskStatus(
-          id: id,
-          newStatus: listOfEditOption[_selectedIndex],
-        ),
-      );
-      _rebuild();
-      _onPopEditOptionScreen();
-      _snackBar('Task Status Updated to $address');
-      setState(() {});
     } catch (e) {
       _snackBar('Something went wrong');
     }

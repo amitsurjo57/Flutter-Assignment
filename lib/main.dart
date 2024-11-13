@@ -13,6 +13,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey dialogKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
