@@ -170,8 +170,4 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   void _snackBar(String msg) {
     mySnackBar(context, msg);
   }
-
-  void _onPopEditOptionScreen() {
-    Navigator.pop(context);
-  }
 }
