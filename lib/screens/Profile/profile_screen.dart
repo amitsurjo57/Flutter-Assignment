@@ -1,11 +1,12 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:greeting_app/data/models/network_response.dart';
 import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/screens/Starting%20Body/log_in_screen.dart';
 import 'package:greeting_app/ui/controllers/auth_controllers.dart';
+import 'package:greeting_app/ui/controllers/update_profile_controller.dart';
 import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
 import 'package:greeting_app/widgets/Common%20Widget/my_button.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
@@ -30,7 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   bool _inProgressProfileGetDetails = false;
-  bool _inProgressProfileUpdate = false;
+
+  final UpdateProfileController _updateProfileController = Get.find<
+      UpdateProfileController>();
 
   String _email = '';
   String _firstName = '';
@@ -87,10 +90,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 16),
                   password(),
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: !_inProgressProfileUpdate,
-                    replacement: const CenterProgressIndicator(),
-                    child: button(),
+                  GetBuilder(
+                    init: UpdateProfileController(),
+                    builder: (updateProfileController) {
+                      return Visibility(
+                        visible: !updateProfileController.inProgress,
+                        replacement: const CenterProgressIndicator(),
+                        child: button(),
+                      );
+                    }
                   ),
                 ],
               ),
@@ -134,47 +142,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _profileUpdate() async {
-    try {
-      _inProgressProfileUpdate = true;
-      setState(() {});
-      Map<String, dynamic> profileBody = {
-        "email": _emailController.text.trim(),
-        "firstName": _firstNameController.text.trim(),
-        "lastName": _lastNameController.text.trim(),
-        "mobile": _mobileController.text.trim(),
-        "password": _passwordController.text,
-      };
-
-      if (_selectedImage != null) {
-        List<int> imageBytes = await _selectedImage!.readAsBytes();
-        String convertedImage = base64Encode(imageBytes);
-        profileBody["photo"] = convertedImage;
-      }
-
-      NetworkResponse response = await NetworkCaller.postRequest(
-        url: NetworkUrls.profileUpdate,
-        body: profileBody,
-      );
-
-      _inProgressProfileUpdate = false;
-      setState(() {});
-
-      if (response.isSuccess) {
-        _snackBar('Profile Updated Successfully. Log In again.');
-        await AuthControllers.clearUserData();
-        _navigateToLogInScreen();
-      } else {
-        _inProgressProfileUpdate = false;
-        setState(() {});
-        _snackBar('Something went wrong');
-      }
-    } catch (e) {
-      _snackBar('Something went wrong');
+    bool isSuccess = await _updateProfileController.profileUpdate(
+      email: _emailController.text,
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      mobile: _mobileController.text,
+      password: _passwordController.text,
+    );
+    
+    if(isSuccess){
+      Get.offAll(const LogInScreen());
+      await AuthControllers.clearUserData();
+      mySnackBar('Profile Updated Successfully.\nLog in again.');
+    }else{
+      mySnackBar(_updateProfileController.errorMessage!);
     }
-  }
-
-  void _snackBar(String msg) {
-    mySnackBar(msg);
   }
 
   MyButton button() {
@@ -279,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _pickImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery);
+    await imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       _selectedImage = pickedImage;
       setState(() {});
@@ -301,16 +283,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         fontWeight: FontWeight.w500,
         letterSpacing: 2,
       ),
-    );
-  }
-
-  Future<void> _navigateToLogInScreen() async {
-    await Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const LogInScreen(),
-      ),
-      (_) => false,
     );
   }
 }
