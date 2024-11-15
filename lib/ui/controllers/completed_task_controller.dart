@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:greeting_app/Model/Main%20App/task_counter_model.dart';
 import 'package:greeting_app/Model/Main%20App/task_model.dart';
 import 'package:greeting_app/data/models/network_response.dart';
 import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
-import 'package:greeting_app/widgets/Main%20App/counting_card.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
-class NewTaskController extends GetxController {
+class CompletedTaskController extends GetxController{
+
   bool _inProgress = false;
   bool _isSuccess = false;
   String? _errorMessage;
@@ -35,18 +34,16 @@ class NewTaskController extends GetxController {
     'Progress',
   ];
 
-  List<CountingCard> taskCounterList = [];
+  String address = 'Completed';
+  int _selectedIndex = 1;
 
-  String address = 'New';
-  int _selectedIndex = 0;
-
-  Future<bool> getNewTasks() async {
+  Future<bool> getCompletedTasks() async {
     try {
       _inProgress = true;
       taskList.clear();
       update();
       final NetworkResponse response = await NetworkCaller.getRequest(
-        url: NetworkUrls.tasksList(taskStatus: 'New'),
+        url: NetworkUrls.tasksList(taskStatus: 'Completed'),
       );
 
       if (response.isSuccess) {
@@ -62,51 +59,21 @@ class NewTaskController extends GetxController {
               subTitle: task['description'] ?? '',
               date: task['createdDate'] ?? '',
               status: task['status'] ?? '',
-              statusColor: Colors.blue,
+              statusColor: Colors.green,
               onEdit: () => _onEdit(task['_id'] ?? ''),
               onDelete: () => _deleteTask(task['_id'] ?? ''),
             ),
           );
-          _taskList.add(newTask);
-          update();
-        }
-      } else {
-        _errorMessage = "Something went wrong";
-        _snackBar(_errorMessage!);
-      }
-      return _isSuccess;
-    } catch (e) {
-      _errorMessage = e.toString();
-      return false;
-    }
-  }
-
-  Future<void> getTaskCounter() async {
-    try {
-      NetworkResponse response =
-      await NetworkCaller.getRequest(url: NetworkUrls.taskCounter);
-      if (response.isSuccess) {
-        taskCounterList.clear();
-        update();
-        Map<String, dynamic> responseBody = response.responseData;
-
-        for (var counter in responseBody['data']) {
-          CountingCard countingCard = CountingCard(
-            model: TaskCounterModel(
-              taskNumber: counter['sum'] < 10
-                  ? '0${counter['sum']}'
-                  : '${counter['sum']}',
-              taskName: counter['_id'],
-            ),
-          );
-          taskCounterList.add(countingCard);
+          taskList.add(newTask);
           update();
         }
       } else {
         _snackBar(response.errorMessage);
       }
+      return _isSuccess;
     } catch (e) {
-      _snackBar('Something went wrong');
+      _snackBar(e.toString());
+      return false;
     }
   }
 
@@ -138,17 +105,6 @@ class NewTaskController extends GetxController {
     );
   }
 
-  Future<void> _deleteTask(String id) async {
-    try {
-      await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
-      _snackBar('Task Deleted');
-      getNewTasks();
-      getTaskCounter();
-    } catch (e) {
-      _deleteTaskMessage = e.toString();
-    }
-  }
-
   Future<void> _onEditConfirm(String id) async {
     try {
       await NetworkCaller.getRequest(
@@ -157,8 +113,7 @@ class NewTaskController extends GetxController {
           newStatus: listOfEditOption[_selectedIndex],
         ),
       );
-      getNewTasks();
-      getTaskCounter();
+      getCompletedTasks();
       _selectedIndex = 0;
       _taskStatusUpdateMessage = 'Task Status Updated to $address';
       _snackBar(_taskStatusUpdateMessage);
@@ -168,6 +123,17 @@ class NewTaskController extends GetxController {
       _snackBar(_taskStatusUpdateMessage);
       _selectedIndex = 0;
       update();
+    }
+  }
+
+  Future<void> _deleteTask(String id) async {
+    try {
+      await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
+      _snackBar('Task Deleted');
+      getCompletedTasks();
+    } catch (e) {
+      _deleteTaskMessage = e.toString();
+      _snackBar(_deleteTaskMessage);
     }
   }
 

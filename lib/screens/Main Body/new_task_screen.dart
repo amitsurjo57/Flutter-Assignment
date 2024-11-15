@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:greeting_app/Model/Main%20App/task_counter_model.dart';
-import 'package:greeting_app/data/models/network_response.dart';
-import 'package:greeting_app/data/services/network_caller.dart';
-import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/screens/Main%20Body/create_new_task_screen.dart';
 import 'package:greeting_app/ui/controllers/new_task_controller.dart';
 import 'package:greeting_app/widgets/Common%20Widget/center_progress_indicator.dart';
 import 'package:greeting_app/widgets/Common%20Widget/no_task_message.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
-import 'package:greeting_app/widgets/Main%20App/counting_card.dart';
-import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
 class NewTaskScreen extends StatefulWidget {
   const NewTaskScreen({super.key});
@@ -20,18 +14,8 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  List<TaskWidget> taskList = [];
-  List<CountingCard> taskCounterList = [];
-  String address = 'New';
 
   final NewTaskController _newTaskController = Get.find<NewTaskController>();
-
-  List<String> listOfEditOption = [
-    'New',
-    'Completed',
-    'Canceled',
-    'Progress',
-  ];
 
   @override
   void initState() {
@@ -52,29 +36,31 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         onRefresh: _rebuild,
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
         child: GetBuilder(
-            init: NewTaskController(),
-            builder: (context) {
-              return Visibility(
-                visible: !context.inProgress,
-                replacement: const CenterProgressIndicator(),
-                child: Column(
-                  children: [
-                    countingHeader(),
-                    GetBuilder(
-                        init: NewTaskController(),
-                        builder: (context) {
-                          return Visibility(
-                            visible: context.taskList.isNotEmpty,
-                            replacement: Expanded(
-                              child: NoTaskMessage(refresh: _rebuild),
-                            ),
-                            child: mainTasks(),
-                          );
-                        }),
-                  ],
-                ),
-              );
-            }),
+          init: NewTaskController(),
+          builder: (context) {
+            return Visibility(
+              visible: !context.inProgress,
+              replacement: const CenterProgressIndicator(),
+              child: Column(
+                children: [
+                  countingHeader(),
+                  GetBuilder(
+                    init: NewTaskController(),
+                    builder: (context) {
+                      return Visibility(
+                        visible: context.taskList.isNotEmpty,
+                        replacement: Expanded(
+                          child: NoTaskMessage(refresh: _rebuild),
+                        ),
+                        child: mainTasks(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -91,8 +77,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           separatorBuilder: (context, index) => const SizedBox(width: 8),
-          itemCount: taskCounterList.length,
-          itemBuilder: (context, index) => taskCounterList[index],
+          itemCount: _newTaskController.taskCounterList.length,
+          itemBuilder: (context, index) => _newTaskController.taskCounterList[index],
         ),
       ),
     );
@@ -130,26 +116,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   Future<void> _getTaskCounter() async {
     try {
-      NetworkResponse response =
-          await NetworkCaller.getRequest(url: NetworkUrls.taskCounter);
-      if (response.isSuccess) {
-        taskCounterList.clear();
-        Map<String, dynamic> responseBody = response.responseData;
-
-        for (var counter in responseBody['data']) {
-          CountingCard countingCard = CountingCard(
-            model: TaskCounterModel(
-              taskNumber: counter['sum'] < 10
-                  ? '0${counter['sum']}'
-                  : '${counter['sum']}',
-              taskName: counter['_id'],
-            ),
-          );
-          taskCounterList.add(countingCard);
-        }
-      } else {
-        _snackBar(response.errorMessage);
-      }
+      await _newTaskController.getTaskCounter();
     } catch (e) {
       _snackBar('Something went wrong');
     }
