@@ -150,7 +150,7 @@ class _JoinWithUsState extends State<JoinWithUs> {
   }
 
   void snackBar(String msg) {
-    mySnackBar(context, msg);
+    mySnackBar(msg);
   }
 
   void clearField() {

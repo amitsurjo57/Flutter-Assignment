@@ -116,7 +116,7 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   void snackBar(String msg) {
-    mySnackBar(context, msg);
+    mySnackBar(msg);
   }
 
   Text buildHeader() {

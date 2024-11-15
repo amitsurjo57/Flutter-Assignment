@@ -5,6 +5,7 @@ import 'package:greeting_app/Model/Main%20App/task_model.dart';
 import 'package:greeting_app/data/models/network_response.dart';
 import 'package:greeting_app/data/services/network_caller.dart';
 import 'package:greeting_app/data/utils/network_urls.dart';
+import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Main%20App/counting_card.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
@@ -12,8 +13,6 @@ class NewTaskController extends GetxController {
   bool _inProgress = false;
   bool _isSuccess = false;
   String? _errorMessage;
-  String _taskStatusUpdateMessage = '';
-  String _deleteTaskMessage = ' ';
   final List<TaskWidget> _taskList = [];
 
   List<TaskWidget> get taskList => _taskList;
@@ -23,10 +22,6 @@ class NewTaskController extends GetxController {
   bool get inProgress => _inProgress;
 
   String? get errorMessage => _errorMessage;
-
-  String get taskStatusUpdateMessage => _taskStatusUpdateMessage;
-
-  String get deleteTaskMessage => _deleteTaskMessage;
 
   List<String> listOfEditOption = [
     'New',
@@ -71,8 +66,7 @@ class NewTaskController extends GetxController {
           update();
         }
       } else {
-        _errorMessage = "Something went wrong";
-        _snackBar(_errorMessage!);
+        _errorMessage = response.errorMessage;
       }
       return _isSuccess;
     } catch (e) {
@@ -84,7 +78,7 @@ class NewTaskController extends GetxController {
   Future<void> getTaskCounter() async {
     try {
       NetworkResponse response =
-      await NetworkCaller.getRequest(url: NetworkUrls.taskCounter);
+          await NetworkCaller.getRequest(url: NetworkUrls.taskCounter);
       if (response.isSuccess) {
         taskCounterList.clear();
         update();
@@ -103,10 +97,10 @@ class NewTaskController extends GetxController {
           update();
         }
       } else {
-        _snackBar(response.errorMessage);
+        _errorMessage = response.errorMessage;
       }
     } catch (e) {
-      _snackBar('Something went wrong');
+      _errorMessage = e.toString();
     }
   }
 
@@ -141,11 +135,11 @@ class NewTaskController extends GetxController {
   Future<void> _deleteTask(String id) async {
     try {
       await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
-      _snackBar('Task Deleted');
+      mySnackBar('Task Deleted');
       getNewTasks();
       getTaskCounter();
     } catch (e) {
-      _deleteTaskMessage = e.toString();
+      mySnackBar(e.toString());
     }
   }
 
@@ -160,26 +154,12 @@ class NewTaskController extends GetxController {
       getNewTasks();
       getTaskCounter();
       _selectedIndex = 0;
-      _taskStatusUpdateMessage = 'Task Status Updated to $address';
-      _snackBar(_taskStatusUpdateMessage);
+      mySnackBar('Task Status Updated to $address');
       update();
     } catch (e) {
-      _taskStatusUpdateMessage = 'Something went wrong';
-      _snackBar(_taskStatusUpdateMessage);
+      mySnackBar('Something went wrong');
       _selectedIndex = 0;
       update();
     }
-  }
-
-  void _snackBar(String msg) {
-    Get.showSnackbar(
-      GetSnackBar(
-        messageText: Text(
-          msg,
-          style: const TextStyle(color: Colors.white),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 }

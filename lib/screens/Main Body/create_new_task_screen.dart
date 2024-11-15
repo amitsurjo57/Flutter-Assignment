@@ -125,6 +125,6 @@ class _CreateNewTaskScreenState extends State<CreateNewTaskScreen> {
   }
 
   void _snackBar(String msg) {
-    mySnackBar(context, msg);
+    mySnackBar(msg);
   }
 }

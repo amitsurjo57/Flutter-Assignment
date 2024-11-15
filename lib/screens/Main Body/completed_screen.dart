@@ -25,13 +25,13 @@ class _CompletedScreenState extends State<CompletedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _getCompletedTasks,
-        triggerMode: RefreshIndicatorTriggerMode.anywhere,
-        child: GetBuilder(
-          init: CompletedTaskController(),
-          builder: (completedTaskController) {
-            return Visibility(
+      body: GetBuilder(
+        init: CompletedTaskController(),
+        builder: (completedTaskController) {
+          return RefreshIndicator(
+            onRefresh: _getCompletedTasks,
+            triggerMode: RefreshIndicatorTriggerMode.anywhere,
+            child: Visibility(
               visible: !completedTaskController.inProgress,
               replacement: const CenterProgressIndicator(),
               child: Visibility(
@@ -41,12 +41,12 @@ class _CompletedScreenState extends State<CompletedScreen> {
                   separatorBuilder: (context, index) => const SizedBox(height: 16),
                   itemCount: completedTaskController.taskList.length,
                   itemBuilder: (context, index) =>
-                      completedTaskController.taskList[index],
+                  completedTaskController.taskList[index],
                 ),
               ),
-            );
-          }
-        ),
+            )
+          );
+        }
       ),
     );
   }
@@ -56,14 +56,10 @@ class _CompletedScreenState extends State<CompletedScreen> {
      bool isSuccess = await _completedTaskController.getCompletedTasks();
 
      if(!isSuccess){
-       _snackBar('Something went wrong');
+       mySnackBar(_completedTaskController.errorMessage!);
      }
     } catch (e) {
-      _snackBar(e.toString());
+      mySnackBar(e.toString());
     }
-  }
-
-  void _snackBar(String msg) {
-    mySnackBar(context, msg);
   }
 }

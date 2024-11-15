@@ -14,7 +14,6 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-
   final NewTaskController _newTaskController = Get.find<NewTaskController>();
 
   @override
@@ -32,14 +31,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: floatingActionButton(),
-      body: RefreshIndicator(
-        onRefresh: _rebuild,
-        triggerMode: RefreshIndicatorTriggerMode.anywhere,
-        child: GetBuilder(
-          init: NewTaskController(),
-          builder: (context) {
-            return Visibility(
-              visible: !context.inProgress,
+      body: GetBuilder(
+        init: NewTaskController(),
+        builder: (newTaskController) {
+          return RefreshIndicator(
+            onRefresh: _rebuild,
+            triggerMode: RefreshIndicatorTriggerMode.anywhere,
+            child: Visibility(
+              visible: !newTaskController.inProgress,
               replacement: const CenterProgressIndicator(),
               child: Column(
                 children: [
@@ -58,9 +57,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                   ),
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -78,7 +77,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
           scrollDirection: Axis.horizontal,
           separatorBuilder: (context, index) => const SizedBox(width: 8),
           itemCount: _newTaskController.taskCounterList.length,
-          itemBuilder: (context, index) => _newTaskController.taskCounterList[index],
+          itemBuilder: (context, index) =>
+              _newTaskController.taskCounterList[index],
         ),
       ),
     );
@@ -103,14 +103,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Future<void> _getNewTasks() async {
-    try {
-      bool isSuccess = await _newTaskController.getNewTasks();
+    bool isSuccess = await _newTaskController.getNewTasks();
 
-      if (!isSuccess) {
-        _snackBar(_newTaskController.errorMessage!);
-      }
-    } catch (e) {
-      _snackBar(e.toString());
+    if (!isSuccess) {
+      mySnackBar(_newTaskController.errorMessage!);
     }
   }
 
@@ -118,7 +114,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     try {
       await _newTaskController.getTaskCounter();
     } catch (e) {
-      _snackBar('Something went wrong');
+      mySnackBar('Something went wrong');
     }
   }
 
@@ -132,9 +128,5 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     if (result!) {
       _rebuild();
     }
-  }
-
-  void _snackBar(String msg) {
-    mySnackBar(context, msg);
   }
 }

@@ -174,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _snackBar(String msg) {
-    mySnackBar(context, msg);
+    mySnackBar(msg);
   }
 
   MyButton button() {

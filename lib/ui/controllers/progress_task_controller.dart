@@ -7,8 +7,7 @@ import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
-class CompletedTaskController extends GetxController{
-
+class ProgressTaskController extends GetxController{
   bool _inProgress = false;
   bool _isSuccess = false;
   String? _errorMessage;
@@ -29,16 +28,16 @@ class CompletedTaskController extends GetxController{
     'Progress',
   ];
 
-  String address = 'Completed';
-  int _selectedIndex = 1;
+  String address = 'Progress';
+  int _selectedIndex = 3;
 
-  Future<bool> getCompletedTasks() async {
+  Future<bool> getProgressTasks() async {
     try {
       _inProgress = true;
       taskList.clear();
       update();
       final NetworkResponse response = await NetworkCaller.getRequest(
-        url: NetworkUrls.tasksList(taskStatus: 'Completed'),
+        url: NetworkUrls.tasksList(taskStatus: 'Progress'),
       );
 
       if (response.isSuccess) {
@@ -48,19 +47,20 @@ class CompletedTaskController extends GetxController{
         Map<String, dynamic> newTaskResponse = response.responseData;
 
         for (var task in newTaskResponse['data']) {
+          update();
+
           TaskWidget newTask = TaskWidget(
             taskModel: TaskModel(
               title: task['title'] ?? '',
               subTitle: task['description'] ?? '',
               date: task['createdDate'] ?? '',
               status: task['status'] ?? '',
-              statusColor: Colors.green,
+              statusColor: Colors.purple,
               onEdit: () => _onEdit(task['_id'] ?? ''),
               onDelete: () => _deleteTask(task['_id'] ?? ''),
             ),
           );
           taskList.add(newTask);
-          update();
         }
       } else {
         _errorMessage = response.errorMessage;
@@ -108,13 +108,13 @@ class CompletedTaskController extends GetxController{
           newStatus: listOfEditOption[_selectedIndex],
         ),
       );
-      getCompletedTasks();
-      _selectedIndex = 1;
+      getProgressTasks();
+      _selectedIndex = 3;
       mySnackBar('Task Status Updated to $address');
       update();
     } catch (e) {
       mySnackBar('Something went wrong');
-      _selectedIndex = 1;
+      _selectedIndex = 3;
       update();
     }
   }
@@ -123,7 +123,7 @@ class CompletedTaskController extends GetxController{
     try {
       await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
       mySnackBar('Task Deleted');
-      getCompletedTasks();
+      getProgressTasks();
     } catch (e) {
       mySnackBar(e.toString());
     }

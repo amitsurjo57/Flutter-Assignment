@@ -7,7 +7,7 @@ import 'package:greeting_app/data/utils/network_urls.dart';
 import 'package:greeting_app/widgets/Common%20Widget/snack_bar.dart';
 import 'package:greeting_app/widgets/Main%20App/task_widget.dart';
 
-class CompletedTaskController extends GetxController{
+class CanceledTaskController extends GetxController{
 
   bool _inProgress = false;
   bool _isSuccess = false;
@@ -29,16 +29,16 @@ class CompletedTaskController extends GetxController{
     'Progress',
   ];
 
-  String address = 'Completed';
-  int _selectedIndex = 1;
+  String address = 'Canceled';
+  int _selectedIndex = 2;
 
-  Future<bool> getCompletedTasks() async {
+  Future<bool> getCanceledTasks() async {
     try {
       _inProgress = true;
       taskList.clear();
       update();
       final NetworkResponse response = await NetworkCaller.getRequest(
-        url: NetworkUrls.tasksList(taskStatus: 'Completed'),
+        url: NetworkUrls.tasksList(taskStatus: 'Canceled'),
       );
 
       if (response.isSuccess) {
@@ -54,7 +54,7 @@ class CompletedTaskController extends GetxController{
               subTitle: task['description'] ?? '',
               date: task['createdDate'] ?? '',
               status: task['status'] ?? '',
-              statusColor: Colors.green,
+              statusColor: Colors.red,
               onEdit: () => _onEdit(task['_id'] ?? ''),
               onDelete: () => _deleteTask(task['_id'] ?? ''),
             ),
@@ -108,13 +108,13 @@ class CompletedTaskController extends GetxController{
           newStatus: listOfEditOption[_selectedIndex],
         ),
       );
-      getCompletedTasks();
-      _selectedIndex = 1;
+      _selectedIndex = 2;
+      getCanceledTasks();
       mySnackBar('Task Status Updated to $address');
       update();
     } catch (e) {
       mySnackBar('Something went wrong');
-      _selectedIndex = 1;
+      _selectedIndex = 2;
       update();
     }
   }
@@ -122,8 +122,8 @@ class CompletedTaskController extends GetxController{
   Future<void> _deleteTask(String id) async {
     try {
       await NetworkCaller.getRequest(url: NetworkUrls.deleteTasks(id: id));
+      getCanceledTasks();
       mySnackBar('Task Deleted');
-      getCompletedTasks();
     } catch (e) {
       mySnackBar(e.toString());
     }
